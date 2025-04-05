@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yeni Soru Resmi Ekle</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
+@extends('layouts.admin')
+
+@section('title', 'Soru Resimleri')
+
+@section('content')
+
     <h1>Yeni Soru Resmi Ekle</h1>
     <form action="{{ route('question-images.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="ImagePath" class="form-label">Resim Yolu</label>
-            <input type="text" name="ImagePath" id="ImagePath" class="form-control" value="{{ old('ImagePath') }}" required>
+            <input type="text" name="ImagePath" id="ImagePath" class="form-control" value="{{ old('ImagePath') }}"
+                   required>
             @error('ImagePath')
             <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -23,7 +20,8 @@
             <select name="ExamQuestionID" id="ExamQuestionID" class="form-control" required>
                 <option value="">Seçiniz</option>
                 @foreach ($questions as $question)
-                    <option value="{{ $question->id }}" {{ old('ExamQuestionID') == $question->id ? 'selected' : '' }}>{{ Str::limit($question->QuestionContent, 50) }}</option>
+                    <option
+                        value="{{ $question->id }}" {{ old('ExamQuestionID') == $question->id ? 'selected' : '' }}>{{ Str::limit($question->QuestionContent, 50) }}</option>
                 @endforeach
             </select>
             @error('ExamQuestionID')
@@ -33,7 +31,5 @@
         <button type="submit" class="btn btn-success">Kaydet</button>
         <a href="{{ route('question-images.index') }}" class="btn btn-secondary">Geri Dön</a>
     </form>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+@endsection

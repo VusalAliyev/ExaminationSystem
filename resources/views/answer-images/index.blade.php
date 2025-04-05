@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 <!DOCTYPE html>
 <html lang="en">
