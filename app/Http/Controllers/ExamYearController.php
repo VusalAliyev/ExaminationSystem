@@ -10,12 +10,12 @@ class ExamYearController extends Controller
     public function index()
     {
         $examYears = ExamYear::all();
-        return view('exam-years.index', compact('examYears'));
+        return view('admin.exam-years.index', compact('examYears'));
     }
 
     public function create()
     {
-        return view('exam-years.create');
+        return view('admin.exam-years.create');
     }
 
     public function store(Request $request)
@@ -31,13 +31,13 @@ class ExamYearController extends Controller
     public function show($id)
     {
         $examYear = ExamYear::findOrFail($id);
-        return view('exam-years.show', compact('examYear'));
+        return view('admin.exam-years.show', compact('examYear'));
     }
 
     public function edit($id)
     {
         $examYear = ExamYear::findOrFail($id);
-        return view('exam-years.edit', compact('examYear'));
+        return view('admin.exam-years.edit', compact('examYear'));
     }
 
     public function update(Request $request, $id)

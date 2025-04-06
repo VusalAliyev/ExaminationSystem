@@ -10,12 +10,12 @@ class ExamSubjectController extends Controller
     public function index()
     {
         $examSubjects = ExamSubject::all();
-        return view('exam-subjects.index', compact('examSubjects'));
+        return view('admin.exam-subjects.index', compact('examSubjects'));
     }
 
     public function create()
     {
-        return view('exam-subjects.create');
+        return view('admin.exam-subjects.create');
     }
 
     public function store(Request $request)
@@ -31,13 +31,13 @@ class ExamSubjectController extends Controller
     public function show($id)
     {
         $examSubject = ExamSubject::findOrFail($id);
-        return view('exam-subjects.show', compact('examSubject'));
+        return view('admin.exam-subjects.show', compact('examSubject'));
     }
 
     public function edit($id)
     {
         $examSubject = ExamSubject::findOrFail($id);
-        return view('exam-subjects.edit', compact('examSubject'));
+        return view('admin.exam-subjects.edit', compact('examSubject'));
     }
 
     public function update(Request $request, $id)

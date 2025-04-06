@@ -9,12 +9,12 @@ class ExamGroupController extends Controller
     public function index()
     {
         $examGroups = ExamGroup::all();
-        return view('exam-groups.index', compact('examGroups'));
+        return view('admin.exam-groups.index', compact('examGroups'));
     }
 
     public function create()
     {
-        return view('exam-groups.create');
+        return view('admin.exam-groups.create');
     }
 
     public function store(Request $request)
@@ -30,13 +30,13 @@ class ExamGroupController extends Controller
     public function show($id)
     {
         $examGroup = ExamGroup::findOrFail($id);
-        return view('exam-groups.show', compact('examGroup'));
+        return view('admin.exam-groups.show', compact('examGroup'));
     }
 
     public function edit($id)
     {
         $examGroup = ExamGroup::findOrFail($id);
-        return view('exam-groups.edit', compact('examGroup'));
+        return view('admin.exam-groups.edit', compact('examGroup'));
     }
 
     public function update(Request $request, $id)

@@ -43,6 +43,6 @@
             @enderror
         </div>
         <button type="submit" class="btn btn-success">Kaydet</button>
-        <a href="{{ route('exam-questions.index') }}" class="btn btn-secondary">Geri Dön</a>
+        <a href="{{ route('admin.exam-questions.index') }}" class="btn btn-secondary">Geri Dön</a>
     </form>
 @endsection

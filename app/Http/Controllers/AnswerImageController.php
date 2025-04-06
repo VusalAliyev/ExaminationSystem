@@ -11,13 +11,13 @@ class AnswerImageController extends Controller
     public function index()
     {
         $images = AnswerImage::with('answer')->get();
-        return view('answer-images.index', compact('images'));
+        return view('admin.answer-images.index', compact('images'));
     }
 
     public function create()
     {
         $answers = ExamAnswer::all();
-        return view('answer-images.create', compact('answers'));
+        return view('admin.answer-images.create', compact('answers'));
     }
 
     public function store(Request $request)
@@ -34,14 +34,14 @@ class AnswerImageController extends Controller
     public function show($id)
     {
         $image = AnswerImage::with('answer')->findOrFail($id);
-        return view('answer-images.show', compact('image'));
+        return view('admin.answer-images.show', compact('image'));
     }
 
     public function edit($id)
     {
         $image = AnswerImage::findOrFail($id);
         $answers = ExamAnswer::all();
-        return view('answer-images.edit', compact('image', 'answers'));
+        return view('admin.answer-images.edit', compact('image', 'answers'));
     }
 
     public function update(Request $request, $id)

@@ -12,14 +12,14 @@ class ExamQuestionController extends Controller
     public function index()
     {
         $questions = ExamQuestion::with(['exam', 'subject'])->get();
-        return view('exam-questions.index', compact('questions'));
+        return view('admin.exam-questions.index', compact('questions'));
     }
 
     public function create()
     {
         $exams = Exam::all();
         $subjects = ExamSubject::all();
-        return view('exam-questions.create', compact('exams', 'subjects'));
+        return view('admin.exam-questions.create', compact('exams', 'subjects'));
     }
 
     public function store(Request $request)
@@ -38,7 +38,7 @@ class ExamQuestionController extends Controller
     public function show($id)
     {
         $question = ExamQuestion::with(['exam', 'subject'])->findOrFail($id);
-        return view('exam-questions.show', compact('question'));
+        return view('admin.exam-questions.show', compact('question'));
     }
 
     public function edit($id)
@@ -46,7 +46,7 @@ class ExamQuestionController extends Controller
         $question = ExamQuestion::findOrFail($id);
         $exams = Exam::all();
         $subjects = ExamSubject::all();
-        return view('exam-questions.edit', compact('question', 'exams', 'subjects'));
+        return view('admin.exam-questions.edit', compact('question', 'exams', 'subjects'));
     }
 
     public function update(Request $request, $id)

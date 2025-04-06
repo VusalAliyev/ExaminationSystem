@@ -13,7 +13,7 @@ class ExamController extends Controller
     public function index()
     {
         $exams = Exam::with(['organizer', 'type', 'group', 'year'])->get();
-        return view('exams.index', compact('exams'));
+        return view('admin.exams.index', compact('exams'));
     }
 
     public function create()
@@ -22,7 +22,7 @@ class ExamController extends Controller
         $types = ExamType::all();
         $groups = ExamGroup::all();
         $years = ExamYear::all();
-        return view('exams.create', compact('organizers', 'types', 'groups', 'years'));
+        return view('admin.exams.create', compact('organizers', 'types', 'groups', 'years'));
     }
 
     public function store(Request $request)
@@ -42,7 +42,7 @@ class ExamController extends Controller
     public function show($id)
     {
         $exam = Exam::with(['organizer', 'type', 'group', 'year'])->findOrFail($id);
-        return view('exams.show', compact('exam'));
+        return view('admin.exams.show', compact('exam'));
     }
 
     public function edit($id)
@@ -52,7 +52,7 @@ class ExamController extends Controller
         $types = ExamType::all();
         $groups = ExamGroup::all();
         $years = ExamYear::all();
-        return view('exams.edit', compact('exam', 'organizers', 'types', 'groups', 'years'));
+        return view('admin.exams.edit', compact('exam', 'organizers', 'types', 'groups', 'years'));
     }
 
     public function update(Request $request, $id)

@@ -11,13 +11,13 @@ class ExamAnswerController extends Controller
     public function index()
     {
         $answers = ExamAnswer::with('question')->get();
-        return view('exam-answers.index', compact('answers'));
+        return view('admin.exam-answers.index', compact('answers'));
     }
 
     public function create()
     {
         $questions = ExamQuestion::all();
-        return view('exam-answers.create', compact('questions'));
+        return view('admin.exam-answers.create', compact('questions'));
     }
 
     public function store(Request $request)
@@ -35,14 +35,14 @@ class ExamAnswerController extends Controller
     public function show($id)
     {
         $answer = ExamAnswer::with('question')->findOrFail($id);
-        return view('exam-answers.show', compact('answer'));
+        return view('admin.exam-answers.show', compact('answer'));
     }
 
     public function edit($id)
     {
         $answer = ExamAnswer::findOrFail($id);
         $questions = ExamQuestion::all();
-        return view('exam-answers.edit', compact('answer', 'questions'));
+        return view('admin.exam-answers.edit', compact('answer', 'questions'));
     }
 
     public function update(Request $request, $id)

@@ -10,12 +10,12 @@ class ExamOrganizerController extends Controller
     public function index()
     {
         $examOrganizers = ExamOrganizer::all();
-        return view('exam-organizers.index', compact('examOrganizers'));
+        return view('admin.exam-organizers.index', compact('examOrganizers'));
     }
 
     public function create()
     {
-        return view('exam-organizers.create');
+        return view('admin.exam-organizers.create');
     }
 
     public function store(Request $request)
@@ -31,13 +31,13 @@ class ExamOrganizerController extends Controller
     public function show($id)
     {
         $examOrganizer = ExamOrganizer::findOrFail($id);
-        return view('exam-organizers.show', compact('examOrganizer'));
+        return view('admin.exam-organizers.show', compact('examOrganizer'));
     }
 
     public function edit($id)
     {
         $examOrganizer = ExamOrganizer::findOrFail($id);
-        return view('exam-organizers.edit', compact('examOrganizer'));
+        return view('admin.exam-organizers.edit', compact('examOrganizer'));
     }
 
     public function update(Request $request, $id)

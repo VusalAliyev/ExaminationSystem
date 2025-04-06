@@ -11,11 +11,11 @@ class ExamTypeController extends Controller
     public function index(): View
     {
         $examTypes = ExamType::all();
-        return view('exam-types.index', compact('examTypes'));
+        return view('admin.exam-types.index', compact('examTypes'));
     }
     public function create()
     {
-        return view('exam-types.create');
+        return view('admin.exam-types.create');
     }
     public function store(Request $request)
     {
@@ -29,13 +29,13 @@ class ExamTypeController extends Controller
     public function show($id)
     {
         $examType = ExamType::findOrFail($id);
-        return view('exam-types.show', compact('examType'));
+        return view('admin.exam-types.show', compact('examType'));
     }
 
     public function edit($id)
     {
         $examType = ExamType::findOrFail($id);
-        return view('exam-types.edit', compact('examType'));
+        return view('admin.exam-types.edit', compact('examType'));
     }
 
     public function update(Request $request, $id)

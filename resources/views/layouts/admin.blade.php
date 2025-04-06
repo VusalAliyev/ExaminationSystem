@@ -50,16 +50,16 @@
         <div class="col-md-2 sidebar">
             <h4 class="text-center">Navigasyon</h4>
             <hr>
-            <a href="{{ route('exam-types.index') }}">Sınav Türleri</a>
-            <a href="{{ route('exam-years.index') }}">Sınav Yılları</a>
-            <a href="{{ route('exam-groups.index') }}">Sınav Grupları</a>
-            <a href="{{ route('exam-subjects.index') }}">Sınav Konuları</a>
-            <a href="{{ route('exam-organizers.index') }}">Organizatörler</a>
-            <a href="{{ route('exams.index') }}">Sınavlar</a>
-            <a href="{{ route('exam-questions.index') }}">Sınav Soruları</a>
-            <a href="{{ route('exam-answers.index') }}">Sınav Cevapları</a>
-            <a href="{{ route('answer-images.index') }}">Cevap Resimleri</a>
-            <a href="{{ route('question-images.index') }}">Soru Resimleri</a>
+            <a href="{{ route('exam-types.index') }}">İmtahan Tipi</a>
+            <a href="{{ route('exam-years.index') }}">İmtahan İlləri</a>
+            <a href="{{ route('exam-groups.index') }}">İmtahan Grupları</a>
+            <a href="{{ route('exam-subjects.index') }}">İmtahan Fənnləri</a>
+            <a href="{{ route('exam-organizers.index') }}">Keçirən Qurum</a>
+            <a href="{{ route('exams.index') }}">İmtahanlar</a>
+            <a href="{{ route('exam-questions.index') }}">İmtahan Sualları</a>
+            <a href="{{ route('exam-answers.index') }}">İmtahan Cavabları</a>
+            <a href="{{ route('answer-images.index') }}">Cavab Şəkilləri</a>
+            <a href="{{ route('question-images.index') }}">Sual Şəkilləri</a>
         </div>
 
         <!-- Main Content -->
