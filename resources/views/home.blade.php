@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abituriyent İmtahan Sistemi - Əsas Səhifə</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}" >
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <div class="logo">
+        <span class="material-icons">book</span>
+        <span>Abituriyent İmtahan Sistemi</span>
+    </div>
+    <form class="search-bar" method="GET" action="{{ route('home') }}">
+        <span class="material-icons">search</span>
+        <input type="text" name="search" placeholder="İmtahan axtar..." value="{{ request('search') }}">
+    </form>
+    <div class="profile">
+        <span class="material-icons">account_circle</span>
+        <span>Salam, {{ $user->name }}!</span>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h2>İmtahanları Filtrlə</h2>
+        <form method="GET" action="{{ route('home') }}">
+            <div class="filter">
+                <label for="year">İl:</label>
+                <select id="year" name="year">
+                    <option value="">Hamısı</option>
+                    @foreach ($years as $year)
+                        <option value="{{ $year->id }}" {{ request('year') == $year->id ? 'selected' : '' }}>
+                            {{ $year->Year }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="filter">
+                <label for="group">Qrup:</label>
+                <select id="group" name="group">
+                    <option value="">Hamısı</option>
+                    @foreach ($groups as $group)
+                        <option value="{{ $group->id }}" {{ request('group') == $group->id ? 'selected' : '' }}>
+                            {{ $group->GroupNumber }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="filter">
+                <label for="type">Tip:</label>
+                <select id="type" name="type">
+                    <option value="">Hamısı</option>
+                    @foreach ($types as $type)
+                        <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+                            {{ $type->Type }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="filter">
+                <label for="organizer">Təşkilatçı:</label>
+                <select id="organizer" name="organizer">
+                    <option value="">Hamısı</option>
+                    @foreach ($organizers as $organizer)
+                        <option value="{{ $organizer->id }}" {{ request('organizer') == $organizer->id ? 'selected' : '' }}>
+                            {{ $organizer->Name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <button type="submit" class="apply-btn">Tətbiq Et</button>
+        </form>
+    </aside>
+
+    <!-- Exam Cards -->
+    <main class="main-content">
+        <h1>Mövcud İmtahanlar</h1>
+        <div class="exam-grid">
+            @forelse ($exams as $exam)
+                <div class="exam-card">
+                    <h3>{{ $exam->Name }}</h3>
+                    <p>Təşkilatçı: {{ $exam->organizer->Name }}</p>
+                    <p>İl: {{ $exam->year->Year }}</p>
+                    <p>Qrup: {{ $exam->group->GroupNumber }}</p>
+                    <p>Tip: {{ $exam->type->Type }}</p>
+                    <a href="{{ route('exam', $exam->id) }}" class="start-btn">İmtahanı Başlat</a>
+                </div>
+            @empty
+                <p>Heç bir imtahan tapılmadı.</p>
+            @endforelse
+        </div>
+    </main>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <p>© 2025 Abituriyent İmtahan Sistemi</p>
+    <div class="footer-links">
+        <a href="#">Bizimlə Əlaqə</a>
+        <a href="#">Şərtlər və Qaydalar</a>
+    </div>
+</footer>
+</body>
+</html>
