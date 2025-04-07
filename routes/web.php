@@ -33,6 +33,7 @@ Route::get('/exam/{id}', function ($id) {
 })->name('exam');
 
 Route::get('/exam/{id}', [ExamController::class, 'show'])->name('exam');
+Route::post('/exam/{id}/finish', [ExamController::class, 'finish'])->name('exam.finish');
 
 Route::get('/welcome', function () {
     return view('welcome');

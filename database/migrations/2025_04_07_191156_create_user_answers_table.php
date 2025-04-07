@@ -22,8 +22,8 @@ return new class extends Migration
             // Xarici açarlar (foreign keys)
             $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('examId')->references('id')->on('exams')->onDelete('cascade');
-            $table->foreign('questionId')->references('id')->on('questions')->onDelete('cascade');
-            $table->foreign('answerId')->references('id')->on('answers')->onDelete('cascade');
+            $table->foreign('questionId')->references('id')->on('exam_questions')->onDelete('cascade');
+            $table->foreign('answerId')->references('id')->on('exam_answers')->onDelete('cascade');
         });
     }
 

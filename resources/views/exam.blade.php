@@ -6,7 +6,7 @@
     <title>İmtahan - Abituriyent İmtahan Sistemi</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
 <!-- Header -->
@@ -16,7 +16,7 @@
         <span>Abituriyent İmtahan Sistemi</span>
     </div>
     <div class="exam-info">
-        <h2>{{ $exam->name }}</h2>
+        <h2>{{ $exam->Name }}</h2>
         <p>Qalan vaxt: 01:30:00</p>
     </div>
     <div class="profile">
@@ -31,9 +31,9 @@
         <div class="question-card" id="question-{{ $index }}" style="display: {{ $index == 0 ? 'block' : 'none' }}">
             <div class="question-header">
                 <span>Sual {{ $index + 1 }}/{{ $questions->count() }}</span>
-                <span>{{ $question->point }} bal</span>
+                <span>{{ $question->Point }} bal</span>
             </div>
-            <h3>{{ $question->text }}</h3>
+            <h3>{{ $question->QuestionContent }}</h3>
             @if ($question->image)
                 <div class="question-image">
                     <img src="{{ asset('storage/' . $question->image->imagePath) }}" alt="Sual şəkli">
@@ -47,7 +47,7 @@
                 @foreach ($question->answers as $answer)
                     <label class="answer-option">
                         <input type="radio" name="answer[{{ $question->id }}]" value="{{ $answer->id }}">
-                        {{ $answer->text }}
+                        {{ $answer->AnswerContent }}
                     </label>
                 @endforeach
             </form>

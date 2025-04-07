@@ -6,6 +6,7 @@ use App\Models\Exam;
 use App\Models\ExamAnswer;
 use App\Models\ExamQuestion;
 use App\Models\ExamResult;
+use App\Models\UserAnswer;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
