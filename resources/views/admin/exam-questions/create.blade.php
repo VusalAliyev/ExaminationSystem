@@ -127,9 +127,11 @@
                                                 @if($question->images->isNotEmpty())
                                                     <div class="mb-2">
                                                         <strong>Sualın Şəkilləri:</strong>
-                                                        @foreach($question->images as $image)
-                                                            <img src="{{ Storage::url($image->image_path) }}" alt="Sual Şəkli" class="img-thumbnail" style="max-width: 100px;">
-                                                        @endforeach
+                                                        <div class="d-flex flex-wrap">
+                                                            @foreach($question->images as $image)
+                                                                <img src="{{ Storage::url($image->image_path) }}" alt="Sual Şəkli" class="img-fluid rounded me-2 mb-2" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                            @endforeach
+                                                        </div>
                                                     </div>
                                                 @endif
                                                 <div class="mt-2">
@@ -142,9 +144,9 @@
                                                                     (Doğru Cavab)
                                                                 @endif
                                                                 @if($answer->images->isNotEmpty())
-                                                                    <div class="mt-1">
+                                                                    <div class="mt-1 d-flex flex-wrap">
                                                                         @foreach($answer->images as $image)
-                                                                            <img src="{{ Storage::url($image->image_path) }}" alt="Cavab Şəkli" class="img-thumbnail" style="max-width: 80px;">
+                                                                            <img src="{{ Storage::url($image->image_path) }}" alt="Cavab Şəkli" class="img-fluid rounded me-2 mb-2" style="max-width: 100px; max-height: 100px; object-fit: cover;">
                                                                         @endforeach
                                                                     </div>
                                                                 @endif
@@ -376,7 +378,7 @@
         .subject-content {
             margin-top: 20px;
         }
-        .img-thumbnail {
+        .img-fluid {
             margin-right: 5px;
             margin-bottom: 5px;
         }
