@@ -7,13 +7,14 @@ use App\Models\ExamOrganizer;
 use App\Models\ExamType;
 use App\Models\ExamGroup;
 use App\Models\ExamYear;
+use App\Models\Sector; // Sector modelini ekle
 use Illuminate\Http\Request;
 
 class ExamsController extends Controller
 {
     public function index()
     {
-        $exams = Exam::with(['organizer', 'type', 'group', 'year'])->get();
+        $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector'])->get();
         return view('admin.exams.index', compact('exams'));
     }
 
@@ -23,7 +24,8 @@ class ExamsController extends Controller
         $types = ExamType::all();
         $groups = ExamGroup::all();
         $years = ExamYear::all();
-        return view('admin.exams.create', compact('organizers', 'types', 'groups', 'years'));
+        $sectors = Sector::all(); // Sektörleri al
+        return view('admin.exams.create', compact('organizers', 'types', 'groups', 'years', 'sectors'));
     }
 
     public function store(Request $request)
@@ -34,6 +36,7 @@ class ExamsController extends Controller
             'exam_type_id' => 'required|exists:exam_types,id',
             'exam_group_id' => 'required|exists:exam_groups,id',
             'exam_year_id' => 'required|exists:exam_years,id',
+            'sector_id' => 'required|exists:sectors,id', // Sector doğrulama
         ]);
 
         Exam::create($validated);
@@ -42,7 +45,7 @@ class ExamsController extends Controller
 
     public function show($id)
     {
-        $exam = Exam::with(['organizer', 'type', 'group', 'year'])->findOrFail($id);
+        $exam = Exam::with(['organizer', 'type', 'group', 'year', 'sector'])->findOrFail($id);
         return view('admin.exams.show', compact('exam'));
     }
 
@@ -53,7 +56,8 @@ class ExamsController extends Controller
         $types = ExamType::all();
         $groups = ExamGroup::all();
         $years = ExamYear::all();
-        return view('admin.exams.edit', compact('exam', 'organizers', 'types', 'groups', 'years'));
+        $sectors = Sector::all(); // Sektörleri al
+        return view('admin.exams.edit', compact('exam', 'organizers', 'types', 'groups', 'years', 'sectors'));
     }
 
     public function update(Request $request, $id)
@@ -66,6 +70,7 @@ class ExamsController extends Controller
             'exam_type_id' => 'required|exists:exam_types,id',
             'exam_group_id' => 'required|exists:exam_groups,id',
             'exam_year_id' => 'required|exists:exam_years,id',
+            'sector_id' => 'required|exists:sectors,id', // Sector doğrulama
         ]);
 
         $exam->update($validated);

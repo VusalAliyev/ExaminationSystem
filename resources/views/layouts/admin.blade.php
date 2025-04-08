@@ -9,20 +9,20 @@
     <style>
         .sidebar {
             min-height: 100vh;
-            background-color: #212529; /* Dark gray/black background like in the image */
+            background-color: #212529;
             padding-top: 20px;
-            color: #ffffff; /* White text for contrast */
+            color: #ffffff;
         }
         .sidebar h4 {
-            color: #ffffff; /* White text for the heading */
+            color: #ffffff;
             font-size: 1.25rem;
             margin-bottom: 1rem;
         }
         .sidebar hr {
-            border-top: 1px solid #495057; /* Slightly lighter divider for contrast */
+            border-top: 1px solid #495057;
         }
         .sidebar a {
-            color: #adb5bd; /* Light gray text for links, similar to the image */
+            color: #adb5bd;
             padding: 10px 15px;
             display: block;
             text-decoration: none;
@@ -30,12 +30,11 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .sidebar a:hover {
-            background-color: #343a40; /* Slightly lighter dark shade on hover */
-            color: #ffffff; /* White text on hover */
+            background-color: #343a40;
+            color: #ffffff;
         }
-        /* Optional: Add spacing and styling for sections if you want to mimic the "WORKSPACE" style */
         .sidebar .section-title {
-            color: #6c757d; /* Muted gray for section titles like "WORKSPACE" */
+            color: #6c757d;
             font-size: 0.85rem;
             text-transform: uppercase;
             padding: 10px 15px;
@@ -55,6 +54,7 @@
             <a href="{{ route('exam-groups.index') }}">İmtahan Grupları</a>
             <a href="{{ route('exam-subjects.index') }}">İmtahan Fənnləri</a>
             <a href="{{ route('exam-organizers.index') }}">Keçirən Qurum</a>
+            <a href="{{ route('sectors.index') }}">Sektor</a> <!-- Yeni eklenen bağlantı -->
             <a href="{{ route('exams.index') }}">İmtahanlar</a>
             <a href="{{ route('exam-questions.index') }}">İmtahan Sualları</a>
             <a href="{{ route('exam-answers.index') }}">İmtahan Cavabları</a>

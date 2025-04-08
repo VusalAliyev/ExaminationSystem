@@ -60,6 +60,18 @@
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
+        <div class="mb-3">
+            <label for="sector_id" class="form-label">Sektor</label>
+            <select name="sector_id" id="sector_id" class="form-control" required>
+                <option value="">Seçin</option>
+                @foreach ($sectors as $sector)
+                    <option value="{{ $sector->id }}" {{ $exam->sector_id == $sector->id ? 'selected' : '' }}>{{ $sector->sector_name }}</option>
+                @endforeach
+            </select>
+            @error('sector_id')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
         <button type="submit" class="btn btn-success">Yenilə</button>
         <a href="{{ route('exams.index') }}" class="btn btn-secondary">Geri Qayıt</a>
     </form>

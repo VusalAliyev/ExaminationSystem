@@ -10,6 +10,7 @@
             <p class="card-text">Növ: {{ $exam->type->type }}</p>
             <p class="card-text">Qrup: {{ $exam->group->group_name }}</p>
             <p class="card-text">İl: {{ $exam->year->year }}</p>
+            <p class="card-text">Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p> <!-- Sector bilgisi -->
             <a href="{{ route('exams.index') }}" class="btn btn-secondary">Geri Qayıt</a>
             <a href="{{ route('exams.edit', $exam->id) }}" class="btn btn-warning">Redaktə Et</a>
         </div>
