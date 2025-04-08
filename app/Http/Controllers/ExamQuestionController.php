@@ -25,14 +25,14 @@ class ExamQuestionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'QuestionContent' => 'required|string',
-            'Point' => 'required|integer|min:0',
-            'ExamSubjectID' => 'required|exists:exam_subjects,id',
-            'ExamID' => 'required|exists:exams,id',
+            'question_content' => 'required|string',
+            'point' => 'required|integer|min:0',
+            'exam_subject_id' => 'required|exists:exam_subjects,id',
+            'exam_id' => 'required|exists:exams,id',
         ]);
 
         ExamQuestion::create($validated);
-        return redirect()->route('exam-questions.index')->with('success', 'Soru başarıyla oluşturuldu.');
+        return redirect()->route('exam-questions.index')->with('success', 'Sual uğurla yaradıldı.');
     }
 
     public function show($id)
@@ -54,20 +54,20 @@ class ExamQuestionController extends Controller
         $question = ExamQuestion::findOrFail($id);
 
         $validated = $request->validate([
-            'QuestionContent' => 'required|string',
-            'Point' => 'required|integer|min:0',
-            'ExamSubjectID' => 'required|exists:exam_subjects,id',
-            'ExamID' => 'required|exists:exams,id',
+            'question_content' => 'required|string',
+            'point' => 'required|integer|min:0',
+            'exam_subject_id' => 'required|exists:exam_subjects,id',
+            'exam_id' => 'required|exists:exams,id',
         ]);
 
         $question->update($validated);
-        return redirect()->route('exam-questions.index')->with('success', 'Soru başarıyla güncellendi.');
+        return redirect()->route('exam-questions.index')->with('success', 'Sual uğurla yeniləndi.');
     }
 
     public function destroy($id)
     {
         $question = ExamQuestion::findOrFail($id);
         $question->delete();
-        return redirect()->route('exam-questions.index')->with('success', 'Soru başarıyla silindi.');
+        return redirect()->route('exam-questions.index')->with('success', 'Sual uğurla silindi.');
     }
 }

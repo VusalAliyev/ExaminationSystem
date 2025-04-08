@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamType extends Model
 {
-    protected $fillable = ['Type'];
+    protected $fillable = ['type'];
 
     public function exams()
     {
-        return $this->hasMany(Exam::class, 'ExamTypeID');
+        return $this->hasMany(Exam::class, 'exam_type_id');
     }
 }

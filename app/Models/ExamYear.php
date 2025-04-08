@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamYear extends Model
 {
-    protected $fillable = ['Year'];
+    protected $fillable = ['year'];
 
     public function exams()
     {
-        return $this->hasMany(Exam::class, 'ExamYearID');
+        return $this->hasMany(Exam::class, 'exam_year_id');
     }
 }

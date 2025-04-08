@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('exam_questions', function (Blueprint $table) {
             $table->id();
-            $table->text('QuestionContent');
-            $table->integer('Point');
-            $table->foreignId('ExamSubjectID')->constrained('exam_subjects')->onDelete('cascade');
-            $table->foreignId('ExamID')->constrained('exams')->onDelete('cascade');
+            $table->text('question_content');
+            $table->integer('point');
+            $table->foreignId('exam_subject_id')->constrained('exam_subjects')->onDelete('cascade');
+            $table->foreignId('exam_id')->constrained('exams')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -32,6 +32,10 @@ Route::get('/exam/{id}', function ($id) {
     return "İmtahan ID: " . $id;
 })->name('exam');
 
+use App\Http\Controllers\ResultsController;
+
+Route::get('/results/{examId}', [ResultsController::class, 'show'])->name('results');
+
 Route::get('/exam/{id}', [ExamController::class, 'show'])->name('exam');
 Route::post('/exam/{id}/finish', [ExamController::class, 'finish'])->name('exam.finish');
 

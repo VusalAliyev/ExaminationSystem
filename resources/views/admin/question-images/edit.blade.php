@@ -1,32 +1,32 @@
 @extends('layouts.admin')
 
-@section('title', 'Soru Resimleri')
+@section('title', 'Sual Şəkli Redaktə Et')
 
 @section('content')
-    <h1>Soru Resmi Düzenle</h1>
+    <h1>Sual Şəkli Redaktə Et</h1>
     <form action="{{ route('question-images.update', $image->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">
-            <label for="ImagePath" class="form-label">Resim Yolu</label>
-            <input type="text" name="ImagePath" id="ImagePath" class="form-control" value="{{ $image->ImagePath }}" required>
-            @error('ImagePath')
+            <label for="image_path" class="form-label">Şəkil Yolu</label>
+            <input type="text" name="image_path" id="image_path" class="form-control" value="{{ $image->image_path }}" required>
+            @error('image_path')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="mb-3">
-            <label for="ExamQuestionID" class="form-label">Soru</label>
-            <select name="ExamQuestionID" id="ExamQuestionID" class="form-control" required>
-                <option value="">Seçiniz</option>
+            <label for="exam_question_id" class="form-label">Sual</label>
+            <select name="exam_question_id" id="exam_question_id" class="form-control" required>
+                <option value="">Seçin</option>
                 @foreach ($questions as $question)
-                    <option value="{{ $question->id }}" {{ $image->ExamQuestionID == $question->id ? 'selected' : '' }}>{{ Str::limit($question->QuestionContent, 50) }}</option>
+                    <option value="{{ $question->id }}" {{ $image->exam_question_id == $question->id ? 'selected' : '' }}>{{ Str::limit($question->question_content, 50) }}</option>
                 @endforeach
             </select>
-            @error('ExamQuestionID')
+            @error('exam_question_id')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-success">Güncelle</button>
-        <a href="{{ route('question-images.index') }}" class="btn btn-secondary">Geri Dön</a>
+        <button type="submit" class="btn btn-success">Yenilə</button>
+        <a href="{{ route('question-images.index') }}" class="btn btn-secondary">Geri Qayıt</a>
     </form>
 @endsection

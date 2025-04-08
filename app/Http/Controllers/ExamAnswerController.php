@@ -23,13 +23,13 @@ class ExamAnswerController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'AnswerContent' => 'required|string',
-            'State' => 'required|string|in:Correct,Incorrect',
-            'ExamQuestionID' => 'required|exists:exam_questions,id',
+            'answer_content' => 'required|string',
+            'state' => 'required|string|in:Correct,Incorrect',
+            'exam_question_id' => 'required|exists:exam_questions,id',
         ]);
 
         ExamAnswer::create($validated);
-        return redirect()->route('exam-answers.index')->with('success', 'Cevap başarıyla oluşturuldu.');
+        return redirect()->route('exam-answers.index')->with('success', 'Cavab uğurla yaradıldı.');
     }
 
     public function show($id)
@@ -50,19 +50,19 @@ class ExamAnswerController extends Controller
         $answer = ExamAnswer::findOrFail($id);
 
         $validated = $request->validate([
-            'AnswerContent' => 'required|string',
-            'State' => 'required|string|in:Correct,Incorrect',
-            'ExamQuestionID' => 'required|exists:exam_questions,id',
+            'answer_content' => 'required|string',
+            'state' => 'required|string|in:Correct,Incorrect',
+            'exam_question_id' => 'required|exists:exam_questions,id',
         ]);
 
         $answer->update($validated);
-        return redirect()->route('exam-answers.index')->with('success', 'Cevap başarıyla güncellendi.');
+        return redirect()->route('exam-answers.index')->with('success', 'Cavab uğurla yeniləndi.');
     }
 
     public function destroy($id)
     {
         $answer = ExamAnswer::findOrFail($id);
         $answer->delete();
-        return redirect()->route('exam-answers.index')->with('success', 'Cevap başarıyla silindi.');
+        return redirect()->route('exam-answers.index')->with('success', 'Cavab uğurla silindi.');
     }
 }

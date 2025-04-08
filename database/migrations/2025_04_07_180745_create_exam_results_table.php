@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('exam_results', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('userId'); // Tələbənin ID-si
-            $table->unsignedBigInteger('examId'); // İmtahanın ID-si
-            $table->integer('totalScore'); // Ümumi bal
-            $table->integer('correctAnswers'); // Düzgün cavabların sayı
-            $table->integer('wrongAnswers'); // Səhv cavabların sayı
-            $table->integer('maxScore'); // İmtahanın maksimum mümkün balı
-            $table->timestamp('completedAt'); // İmtahanın bitmə tarixi
+            $table->unsignedBigInteger('user_id'); // Tələbənin ID-si
+            $table->unsignedBigInteger('exam_id'); // İmtahanın ID-si
+            $table->integer('total_score'); // Ümumi bal
+            $table->integer('correct_answers'); // Düzgün cavabların sayı
+            $table->integer('wrong_answers'); // Səhv cavabların sayı
+            $table->integer('max_score'); // İmtahanın maksimum mümkün balı
+            $table->timestamp('completed_at'); // İmtahanın bitmə tarixi
             $table->timestamps();
 
             // Xarici açarlar (foreign keys)
-            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('examId')->references('id')->on('exams')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');
         });
     }
 

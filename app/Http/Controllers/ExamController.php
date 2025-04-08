@@ -32,7 +32,7 @@ class ExamController extends Controller
         $user = auth()->user();
 
         // İmtahanın suallarını çək
-        $questions = ExamQuestion::where('examId', $id)->get();
+        $questions = ExamQuestion::where('examId', $id)->with('answers')->get();
 
         // Maksimum balı hesabla (bütün sualların ballarının cəmi)
         $maxScore = $questions->sum('point');
@@ -45,13 +45,13 @@ class ExamController extends Controller
         $correctAnswers = 0;
         $wrongAnswers = 0;
 
-        // Hər sual üçün cavabı yoxla
+        // Hər sual üçün cavabı yoxla və saxla
         foreach ($answers as $questionId => $answerId) {
             $question = ExamQuestion::find($questionId);
             $answer = ExamAnswer::find($answerId);
 
             if ($question && $answer) {
-                // Cavabı saxla
+                // Cavabı UserAnswer cədvəlinə saxla
                 UserAnswer::create([
                     'userId' => $user->id,
                     'examId' => $exam->id,

@@ -15,7 +15,7 @@
         @foreach ($examTypes as $examType)
             <tr>
                 <td>{{ $examType->id }}</td>
-                <td>{{ $examType->Type }}</td>
+                <td>{{ $examType->type }}</td>
                 <td>
                     <a href="{{ route('exam-types.show', $examType->id) }}" class="btn btn-info btn-sm">Görüntüle</a>
                     <a href="{{ route('exam-types.edit', $examType->id) }}" class="btn btn-warning btn-sm">Düzenle</a>

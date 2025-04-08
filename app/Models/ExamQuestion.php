@@ -7,25 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamQuestion extends Model
 {
-    protected $fillable = ['QuestionContent', 'Point', 'ExamSubjectID', 'ExamID'];
+    protected $fillable = ['question_content', 'point', 'exam_subject_id', 'exam_id'];
 
     public function exam()
     {
-        return $this->belongsTo(Exam::class, 'ExamID');
+        return $this->belongsTo(Exam::class, 'exam_id');
     }
 
     public function subject()
     {
-        return $this->belongsTo(ExamSubject::class, 'ExamSubjectID');
+        return $this->belongsTo(ExamSubject::class, 'exam_subject_id');
     }
 
     public function answers()
     {
-        return $this->hasMany(ExamAnswer::class, 'ExamQuestionID');
+        return $this->hasMany(ExamAnswer::class, 'exam_question_id');
     }
 
     public function images()
     {
-        return $this->hasMany(QuestionImage::class, 'ExamQuestionID');
+        return $this->hasMany(QuestionImage::class, 'exam_question_id');
     }
 }

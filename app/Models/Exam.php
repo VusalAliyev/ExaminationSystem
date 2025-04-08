@@ -7,26 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 
 class Exam extends Model
 {
-    protected $fillable = ['Name', 'ExamOrganizerID', 'ExamTypeID', 'ExamGroupID', 'ExamYearID'];
+    protected $fillable = ['name', 'exam_organizer_id', 'exam_type_id', 'exam_group_id', 'exam_year_id'];
 
     public function organizer()
     {
-        return $this->belongsTo(ExamOrganizer::class, 'ExamOrganizerID');
+        return $this->belongsTo(ExamOrganizer::class, 'exam_organizer_id');
     }
 
     public function type()
     {
-        return $this->belongsTo(ExamType::class, 'ExamTypeID');
+        return $this->belongsTo(ExamType::class, 'exam_type_id');
     }
 
     public function group()
     {
-        return $this->belongsTo(ExamGroup::class, 'ExamGroupID');
+        return $this->belongsTo(ExamGroup::class, 'exam_group_id');
     }
 
     public function year()
     {
-        return $this->belongsTo(ExamYear::class, 'ExamYearID');
+        return $this->belongsTo(ExamYear::class, 'exam_year_id');
     }
 
     public function questions()

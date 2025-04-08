@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamGroup extends Model
 {
-    protected $fillable = ['GroupNumber'];
+    protected $fillable = ['group_name'];
 
     public function exams()
     {
-        return $this->hasMany(Exam::class, 'ExamGroupID');
+        return $this->hasMany(Exam::class, 'exam_group_id');
     }
 }

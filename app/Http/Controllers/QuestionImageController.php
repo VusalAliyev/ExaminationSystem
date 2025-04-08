@@ -23,12 +23,12 @@ class QuestionImageController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'ImagePath' => 'required|string',
-            'ExamQuestionID' => 'required|exists:exam_questions,id',
+            'image_path' => 'required|string',
+            'exam_question_id' => 'required|exists:exam_questions,id',
         ]);
 
         QuestionImage::create($validated);
-        return redirect()->route('question-images.index')->with('success', 'Soru resmi başarıyla oluşturuldu.');
+        return redirect()->route('question-images.index')->with('success', 'Sual şəkli uğurla yaradıldı.');
     }
 
     public function show($id)
@@ -49,18 +49,18 @@ class QuestionImageController extends Controller
         $image = QuestionImage::findOrFail($id);
 
         $validated = $request->validate([
-            'ImagePath' => 'required|string',
-            'ExamQuestionID' => 'required|exists:exam_questions,id',
+            'image_path' => 'required|string',
+            'exam_question_id' => 'required|exists:exam_questions,id',
         ]);
 
         $image->update($validated);
-        return redirect()->route('question-images.index')->with('success', 'Soru resmi başarıyla güncellendi.');
+        return redirect()->route('question-images.index')->with('success', 'Sual şəkli uğurla yeniləndi.');
     }
 
     public function destroy($id)
     {
         $image = QuestionImage::findOrFail($id);
         $image->delete();
-        return redirect()->route('question-images.index')->with('success', 'Soru resmi başarıyla silindi.');
+        return redirect()->route('question-images.index')->with('success', 'Sual şəkli uğurla silindi.');
     }
 }

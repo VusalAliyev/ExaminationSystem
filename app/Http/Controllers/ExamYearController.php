@@ -21,11 +21,11 @@ class ExamYearController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Year' => 'required|integer|min:1900|max:9999',
+            'year' => 'required|integer|min:1900|max:9999', // 'Year' -> 'year'
         ]);
 
         ExamYear::create($validated);
-        return redirect()->route('exam-years.index')->with('success', 'Sınav yılı başarıyla oluşturuldu.');
+        return redirect()->route('exam-years.index')->with('success', 'İmtahan ili uğurla yaradıldı.'); // Türkcədən Azərbaycancaya
     }
 
     public function show($id)
@@ -45,17 +45,17 @@ class ExamYearController extends Controller
         $examYear = ExamYear::findOrFail($id);
 
         $validated = $request->validate([
-            'Year' => 'required|integer|min:1900|max:9999',
+            'year' => 'required|integer|min:1900|max:9999', // 'Year' -> 'year'
         ]);
 
         $examYear->update($validated);
-        return redirect()->route('exam-years.index')->with('success', 'Sınav yılı başarıyla güncellendi.');
+        return redirect()->route('exam-years.index')->with('success', 'İmtahan ili uğurla yeniləndi.'); // Türkcədən Azərbaycancaya
     }
 
     public function destroy($id)
     {
         $examYear = ExamYear::findOrFail($id);
         $examYear->delete();
-        return redirect()->route('exam-years.index')->with('success', 'Sınav yılı başarıyla silindi.');
+        return redirect()->route('exam-years.index')->with('success', 'İmtahan ili uğurla silindi.'); // Türkcədən Azərbaycancaya
     }
 }

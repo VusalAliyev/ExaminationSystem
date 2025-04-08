@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('user_answers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('userId'); // Tələbənin ID-si
-            $table->unsignedBigInteger('examId'); // İmtahanın ID-si
-            $table->unsignedBigInteger('questionId'); // Sualın ID-si
-            $table->unsignedBigInteger('answerId'); // Seçilmiş cavabın ID-si
+            $table->unsignedBigInteger('user_id'); // Tələbənin ID-si
+            $table->unsignedBigInteger('exam_id'); // İmtahanın ID-si
+            $table->unsignedBigInteger('question_id'); // Sualın ID-si
+            $table->unsignedBigInteger('answer_id'); // Seçilmiş cavabın ID-si
             $table->timestamps();
 
             // Xarici açarlar (foreign keys)
-            $table->foreign('userId')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('examId')->references('id')->on('exams')->onDelete('cascade');
-            $table->foreign('questionId')->references('id')->on('exam_questions')->onDelete('cascade');
-            $table->foreign('answerId')->references('id')->on('exam_answers')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');
+            $table->foreign('question_id')->references('id')->on('exam_questions')->onDelete('cascade');
+            $table->foreign('answer_id')->references('id')->on('exam_answers')->onDelete('cascade');
         });
     }
 

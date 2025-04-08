@@ -1,48 +1,48 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1>Yeni Soru Ekle</h1>
+    <h1>Yeni Sual Əlavə Et</h1>
     <form action="{{ route('exam-questions.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="QuestionContent" class="form-label">Soru İçeriği</label>
-            <textarea name="QuestionContent" id="QuestionContent" class="form-control" required>{{ old('QuestionContent') }}</textarea>
-            @error('QuestionContent')
+            <label for="question_content" class="form-label">Sual Məzmunu</label>
+            <textarea name="question_content" id="question_content" class="form-control" required>{{ old('question_content') }}</textarea>
+            @error('question_content')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="mb-3">
-            <label for="Point" class="form-label">Puan</label>
-            <input type="number" name="Point" id="Point" class="form-control" value="{{ old('Point') }}" required>
-            @error('Point')
+            <label for="point" class="form-label">Xal</label>
+            <input type="number" name="point" id="point" class="form-control" value="{{ old('point') }}" required>
+            @error('point')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="mb-3">
-            <label for="ExamSubjectID" class="form-label">Konu</label>
-            <select name="ExamSubjectID" id="ExamSubjectID" class="form-control" required>
-                <option value="">Seçiniz</option>
+            <label for="exam_subject_id" class="form-label">Mövzu</label>
+            <select name="exam_subject_id" id="exam_subject_id" class="form-control" required>
+                <option value="">Seçin</option>
                 @foreach ($subjects as $subject)
-                    <option value="{{ $subject->id }}" {{ old('ExamSubjectID') == $subject->id ? 'selected' : '' }}>{{ $subject->Name }}</option>
+                    <option value="{{ $subject->id }}" {{ old('exam_subject_id') == $subject->id ? 'selected' : '' }}>{{ $subject->name }}</option>
                 @endforeach
             </select>
-            @error('ExamSubjectID')
+            @error('exam_subject_id')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="mb-3">
-            <label for="ExamID" class="form-label">Sınav</label>
-            <select name="ExamID" id="ExamID" class="form-control" required>
-                <option value="">Seçiniz</option>
+            <label for="exam_id" class="form-label">İmtahan</label>
+            <select name="exam_id" id="exam_id" class="form-control" required>
+                <option value="">Seçin</option>
                 @foreach ($exams as $exam)
-                    <option value="{{ $exam->id }}" {{ old('ExamID') == $exam->id ? 'selected' : '' }}>{{ $exam->Name }}</option>
+                    <option value="{{ $exam->id }}" {{ old('exam_id') == $exam->id ? 'selected' : '' }}>{{ $exam->name }}</option>
                 @endforeach
             </select>
-            @error('ExamID')
+            @error('exam_id')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-success">Kaydet</button>
-        <a href="{{ route('exam-questions.index') }}" class="btn btn-secondary">Geri Dön</a>
+        <button type="submit" class="btn btn-success">Yadda Saxla</button>
+        <a href="{{ route('exam-questions.index') }}" class="btn btn-secondary">Geri Qayıt</a>
     </form>
 @endsection

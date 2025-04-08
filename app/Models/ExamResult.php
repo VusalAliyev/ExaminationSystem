@@ -6,22 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 class ExamResult extends Model
 {
     protected $fillable = [
-        'userId',
-        'examId',
-        'totalScore',
-        'correctAnswers',
-        'wrongAnswers',
-        'maxScore',
-        'completedAt',
+        'user_id',
+        'exam_id',
+        'total_score',
+        'correct_answers',
+        'wrong_answers',
+        'max_score',
+        'completed_at',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userId');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function exam()
     {
-        return $this->belongsTo(Exam::class, 'examId');
+        return $this->belongsTo(Exam::class, 'exam_id');
     }
 }

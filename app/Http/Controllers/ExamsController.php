@@ -8,6 +8,7 @@ use App\Models\ExamType;
 use App\Models\ExamGroup;
 use App\Models\ExamYear;
 use Illuminate\Http\Request;
+
 class ExamsController extends Controller
 {
     public function index()
@@ -28,15 +29,15 @@ class ExamsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
-            'ExamOrganizerID' => 'required|exists:exam_organizers,id',
-            'ExamTypeID' => 'required|exists:exam_types,id',
-            'ExamGroupID' => 'required|exists:exam_groups,id',
-            'ExamYearID' => 'required|exists:exam_years,id',
+            'name' => 'required|string|max:255',
+            'exam_organizer_id' => 'required|exists:exam_organizers,id',
+            'exam_type_id' => 'required|exists:exam_types,id',
+            'exam_group_id' => 'required|exists:exam_groups,id',
+            'exam_year_id' => 'required|exists:exam_years,id',
         ]);
 
         Exam::create($validated);
-        return redirect()->route('exams.index')->with('success', 'Sınav başarıyla oluşturuldu.');
+        return redirect()->route('exams.index')->with('success', 'İmtahan uğurla yaradıldı.');
     }
 
     public function show($id)
@@ -60,21 +61,21 @@ class ExamsController extends Controller
         $exam = Exam::findOrFail($id);
 
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
-            'ExamOrganizerID' => 'required|exists:exam_organizers,id',
-            'ExamTypeID' => 'required|exists:exam_types,id',
-            'ExamGroupID' => 'required|exists:exam_groups,id',
-            'ExamYearID' => 'required|exists:exam_years,id',
+            'name' => 'required|string|max:255',
+            'exam_organizer_id' => 'required|exists:exam_organizers,id',
+            'exam_type_id' => 'required|exists:exam_types,id',
+            'exam_group_id' => 'required|exists:exam_groups,id',
+            'exam_year_id' => 'required|exists:exam_years,id',
         ]);
 
         $exam->update($validated);
-        return redirect()->route('exams.index')->with('success', 'Sınav başarıyla güncellendi.');
+        return redirect()->route('exams.index')->with('success', 'İmtahan uğurla yeniləndi.');
     }
 
     public function destroy($id)
     {
         $exam = Exam::findOrFail($id);
         $exam->delete();
-        return redirect()->route('exams.index')->with('success', 'Sınav başarıyla silindi.');
+        return redirect()->route('exams.index')->with('success', 'İmtahan uğurla silindi.');
     }
 }

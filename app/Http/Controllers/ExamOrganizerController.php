@@ -21,11 +21,11 @@ class ExamOrganizerController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         ExamOrganizer::create($validated);
-        return redirect()->route('exam-organizers.index')->with('success', 'Organizatör başarıyla oluşturuldu.');
+        return redirect()->route('exam-organizers.index')->with('success', 'Təşkilatçı uğurla yaradıldı.');
     }
 
     public function show($id)
@@ -45,17 +45,17 @@ class ExamOrganizerController extends Controller
         $examOrganizer = ExamOrganizer::findOrFail($id);
 
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         $examOrganizer->update($validated);
-        return redirect()->route('exam-organizers.index')->with('success', 'Organizatör başarıyla güncellendi.');
+        return redirect()->route('exam-organizers.index')->with('success', 'Təşkilatçı uğurla yeniləndi.');
     }
 
     public function destroy($id)
     {
         $examOrganizer = ExamOrganizer::findOrFail($id);
         $examOrganizer->delete();
-        return redirect()->route('exam-organizers.index')->with('success', 'Organizatör başarıyla silindi.');
+        return redirect()->route('exam-organizers.index')->with('success', 'Təşkilatçı uğurla silindi.');
     }
 }

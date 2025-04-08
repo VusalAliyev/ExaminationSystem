@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\ExamGroup;
 use Illuminate\Http\Request;
 
@@ -20,11 +21,11 @@ class ExamGroupController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'GroupNumber' => 'required|string|max:255',
+            'group_name' => 'required|string|max:255',
         ]);
 
         ExamGroup::create($validated);
-        return redirect()->route('exam-groups.index')->with('success', 'Sınav grubu başarıyla oluşturuldu.');
+        return redirect()->route('exam-groups.index')->with('success', 'İmtahan qrupu uğurla yaradıldı.');
     }
 
     public function show($id)
@@ -44,17 +45,17 @@ class ExamGroupController extends Controller
         $examGroup = ExamGroup::findOrFail($id);
 
         $validated = $request->validate([
-            'GroupNumber' => 'required|string|max:255',
+            'group_name' => 'required|string|max:255',
         ]);
 
         $examGroup->update($validated);
-        return redirect()->route('exam-groups.index')->with('success', 'Sınav grubu başarıyla güncellendi.');
+        return redirect()->route('exam-groups.index')->with('success', 'İmtahan qrupu uğurla yeniləndi.');
     }
 
     public function destroy($id)
     {
         $examGroup = ExamGroup::findOrFail($id);
         $examGroup->delete();
-        return redirect()->route('exam-groups.index')->with('success', 'Sınav grubu başarıyla silindi.');
+        return redirect()->route('exam-groups.index')->with('success', 'İmtahan qrupu uğurla silindi.');
     }
 }

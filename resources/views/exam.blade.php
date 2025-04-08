@@ -16,7 +16,7 @@
         <span>Abituriyent İmtahan Sistemi</span>
     </div>
     <div class="exam-info">
-        <h2>{{ $exam->Name }}</h2>
+        <h2>{{ $exam->name }}</h2>
         <p>Qalan vaxt: 01:30:00</p>
     </div>
     <div class="profile">
@@ -27,43 +27,43 @@
 
 <!-- Main Content -->
 <main class="exam-content">
-    @forelse ($questions as $index => $question)
-        <div class="question-card" id="question-{{ $index }}" style="display: {{ $index == 0 ? 'block' : 'none' }}">
-            <div class="question-header">
-                <span>Sual {{ $index + 1 }}/{{ $questions->count() }}</span>
-                <span>{{ $question->Point }} bal</span>
+    <form method="POST" action="{{ route('exam.finish', $exam->id) }}">
+        @csrf
+        @forelse ($questions as $index => $question)
+            <div class="question-card" id="question-{{ $index }}" style="display: {{ $index == 0 ? 'block' : 'none' }}">
+                <div class="question-header">
+                    <span>Sual {{ $index + 1 }}/{{ $questions->count() }}</span>
+                    <span>{{ $question->Point }} bal</span>
+                </div>
+                <h3>{{ $question->QuestionContent }}</h3>
+                @if ($question->Image)
+                    <div class="question-image">
+                        <img src="{{ asset('storage/' . $question->image->imagePath) }}" alt="Sual şəkli">
+                    </div>
+                @else
+                    <div class="question-image">
+                        <p>[Sual şəkli yoxdur]</p>
+                    </div>
+                @endif
+                <div class="answers" data-question-id="{{ $question->id }}">
+                    @foreach ($question->answers as $answer)
+                        <label class="answer-option">
+                            <input type="radio" name="answer[{{ $question->id }}]" value="{{ $answer->id }}">
+                            {{ $answer->AnswerContent }}
+                        </label>
+                    @endforeach
+                </div>
             </div>
-            <h3>{{ $question->QuestionContent }}</h3>
-            @if ($question->image)
-                <div class="question-image">
-                    <img src="{{ asset('storage/' . $question->image->imagePath) }}" alt="Sual şəkli">
-                </div>
-            @else
-                <div class="question-image">
-                    <p>[Sual şəkli yoxdur]</p>
-                </div>
-            @endif
-            <form class="answers" data-question-id="{{ $question->id }}">
-                @foreach ($question->answers as $answer)
-                    <label class="answer-option">
-                        <input type="radio" name="answer[{{ $question->id }}]" value="{{ $answer->id }}">
-                        {{ $answer->AnswerContent }}
-                    </label>
-                @endforeach
-            </form>
-        </div>
-    @empty
-        <p>Bu imtahanda sual yoxdur.</p>
-    @endforelse
+        @empty
+            <p>Bu imtahanda sual yoxdur.</p>
+        @endforelse
 
-    <div class="navigation">
-        <button class="prev-btn" onclick="showPreviousQuestion()">Əvvəlki Sual</button>
-        <button class="next-btn" onclick="showNextQuestion()">Növbəti Sual</button>
-        <form method="POST" action="{{ route('exam.finish', $exam->id) }}">
-            @csrf
+        <div class="navigation">
+            <button type="button" class="prev-btn" onclick="showPreviousQuestion()">Əvvəlki Sual</button>
+            <button type="button" class="next-btn" onclick="showNextQuestion()">Növbəti Sual</button>
             <button type="submit" class="finish-btn">İmtahanı Bitir</button>
-        </form>
-    </div>
+        </div>
+    </form>
 </main>
 
 <!-- Footer -->

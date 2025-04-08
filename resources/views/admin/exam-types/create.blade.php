@@ -5,9 +5,9 @@
     <form action="{{ route('exam-types.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="Type" class="form-label">Sınav Türü</label>
-            <input type="text" name="Type" id="Type" class="form-control" value="{{ old('Type') }}" required>
-            @error('Type')
+            <label for="type" class="form-label">Sınav Türü</label>
+            <input type="text" name="type" id="type" class="form-control" value="{{ old('type') }}" required>
+            @error('type')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>

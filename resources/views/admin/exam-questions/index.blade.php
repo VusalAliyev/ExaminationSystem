@@ -1,43 +1,47 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1>Sınav Soruları</h1>
-    <a href="{{ route('exam-questions.create') }}" class="btn btn-primary mb-3">Yeni Soru Ekle</a>
+    <h1>İmtahan Sualları</h1>
+    <a href="{{ route('exam-questions.create') }}" class="btn btn-primary mb-3">Yeni Sual Əlavə Et</a>
     <table class="table table-bordered">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Soru İçeriği</th>
-            <th>Puan</th>
-            <th>Konu</th>
-            <th>Sınav</th>
-            <th>İşlemler</th>
+            <th>Sual Məzmunu</th>
+            <th>Xal</th>
+            <th>Mövzu</th>
+            <th>İmtahan</th>
+            <th>Əməliyyatlar</th>
         </tr>
         </thead>
         <tbody>
-        @foreach ($questions as $question)
+        @forelse ($questions as $question)
             <tr>
                 <td>{{ $question->id }}</td>
-                <td>{{ Str::limit($question->QuestionContent, 50) }}</td>
-                <td>{{ $question->Point }}</td>
-                <td>{{ $question->subject->Name }}</td>
-                <td>{{ $question->exam->Name }}</td>
+                <td>{{ Str::limit($question->question_content, 50) }}</td>
+                <td>{{ $question->point }}</td>
+                <td>{{ $question->subject ? $question->subject->name : 'Təyin edilməyib' }}</td>
+                <td>{{ $question->exam ? $question->exam->name : 'Təyin edilməyib' }}</td>
                 <td>
                     <a href="{{ route('exam-questions.show', $question->id) }}"
-                       class="btn btn-info btn-sm">Görüntüle</a>
+                       class="btn btn-info btn-sm">Bax</a>
                     <a href="{{ route('exam-questions.edit', $question->id) }}"
-                       class="btn btn-warning btn-sm">Düzenle</a>
+                       class="btn btn-warning btn-sm">Redaktə Et</a>
                     <form action="{{ route('exam-questions.destroy', $question->id) }}" method="POST"
                           style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Silmek istediğinize emin misiniz?')">Sil
+                                onclick="return confirm('Silmək istədiyinizə əminsiniz?')">Sil
                         </button>
                     </form>
                 </td>
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="6">Heç bir sual tapılmadı.</td>
+            </tr>
+        @endforelse
         </tbody>
     </table>
 @endsection

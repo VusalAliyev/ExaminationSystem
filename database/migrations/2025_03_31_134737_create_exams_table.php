@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->string('Name');
-            $table->foreignId('ExamOrganizerID')->constrained('exam_organizers')->onDelete('cascade');
-            $table->foreignId('ExamTypeID')->constrained('exam_types')->onDelete('cascade');
-            $table->foreignId('ExamGroupID')->constrained('exam_groups')->onDelete('cascade');
-            $table->foreignId('ExamYearID')->constrained('exam_years')->onDelete('cascade');
+            $table->string('name');
+            $table->foreignId('exam_organizer_id')->constrained('exam_organizers')->onDelete('cascade');
+            $table->foreignId('exam_type_id')->constrained('exam_types')->onDelete('cascade');
+            $table->foreignId('exam_group_id')->constrained('exam_groups')->onDelete('cascade');
+            $table->foreignId('exam_year_id')->constrained('exam_years')->onDelete('cascade');
             $table->timestamps();
         });
     }

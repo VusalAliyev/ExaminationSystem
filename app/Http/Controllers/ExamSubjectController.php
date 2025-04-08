@@ -21,11 +21,11 @@ class ExamSubjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         ExamSubject::create($validated);
-        return redirect()->route('exam-subjects.index')->with('success', 'Sınav konusu başarıyla oluşturuldu.');
+        return redirect()->route('exam-subjects.index')->with('success', 'İmtahan mövzusu uğurla yaradıldı.');
     }
 
     public function show($id)
@@ -45,17 +45,17 @@ class ExamSubjectController extends Controller
         $examSubject = ExamSubject::findOrFail($id);
 
         $validated = $request->validate([
-            'Name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         $examSubject->update($validated);
-        return redirect()->route('exam-subjects.index')->with('success', 'Sınav konusu başarıyla güncellendi.');
+        return redirect()->route('exam-subjects.index')->with('success', 'İmtahan mövzusu uğurla yeniləndi.');
     }
 
     public function destroy($id)
     {
         $examSubject = ExamSubject::findOrFail($id);
         $examSubject->delete();
-        return redirect()->route('exam-subjects.index')->with('success', 'Sınav konusu başarıyla silindi.');
+        return redirect()->route('exam-subjects.index')->with('success', 'İmtahan mövzusu uğurla silindi.');
     }
 }

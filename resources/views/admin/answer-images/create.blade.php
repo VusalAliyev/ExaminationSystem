@@ -1,29 +1,31 @@
 @extends('layouts.admin')
 
+@section('title', 'Yeni Cavab Şəkli Əlavə Et')
+
 @section('content')
-    <h1>Yeni Cevap Resmi Ekle</h1>
+    <h1>Yeni Cavab Şəkli Əlavə Et</h1>
     <form action="{{ route('answer-images.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="ImagePath" class="form-label">Resim Yolu</label>
-            <input type="text" name="ImagePath" id="ImagePath" class="form-control" value="{{ old('ImagePath') }}" required>
-            @error('ImagePath')
+            <label for="image_path" class="form-label">Şəkil Yolu</label>
+            <input type="text" name="image_path" id="image_path" class="form-control" value="{{ old('image_path') }}" required>
+            @error('image_path')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
         <div class="mb-3">
-            <label for="ExamAnswerID" class="form-label">Cevap</label>
-            <select name="ExamAnswerID" id="ExamAnswerID" class="form-control" required>
-                <option value="">Seçiniz</option>
+            <label for="exam_answer_id" class="form-label">Cavab</label>
+            <select name="exam_answer_id" id="exam_answer_id" class="form-control" required>
+                <option value="">Seçin</option>
                 @foreach ($answers as $answer)
-                    <option value="{{ $answer->id }}" {{ old('ExamAnswerID') == $answer->id ? 'selected' : '' }}>{{ Str::limit($answer->AnswerContent, 50) }}</option>
+                    <option value="{{ $answer->id }}" {{ old('exam_answer_id') == $answer->id ? 'selected' : '' }}>{{ Str::limit($answer->answer_content, 50) }}</option>
                 @endforeach
             </select>
-            @error('ExamAnswerID')
+            @error('exam_answer_id')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-success">Kaydet</button>
-        <a href="{{ route('answer-images.index') }}" class="btn btn-secondary">Geri Dön</a>
+        <button type="submit" class="btn btn-success">Yadda Saxla</button>
+        <a href="{{ route('answer-images.index') }}" class="btn btn-secondary">Geri Qayıt</a>
     </form>
 @endsection
