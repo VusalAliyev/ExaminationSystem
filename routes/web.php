@@ -41,6 +41,7 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::resource('exams', ExamsController::class);
     Route::resource('exam-questions', ExamQuestionController::class);
     Route::resource('exam-answers', ExamAnswerController::class);
+    Route::get('exam-questions/create/{examId}', [ExamQuestionController::class, 'create'])->name('exam-questions.create'); // Özel create route'u
     Route::resource('answer-images', AnswerImageController::class);
     Route::resource('question-images', QuestionImageController::class);
 

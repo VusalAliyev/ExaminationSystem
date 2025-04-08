@@ -1,73 +1,183 @@
 <?php
 
-namespace App\Http\Controllers;
+    namespace App\Http\Controllers;
 
-use App\Models\ExamQuestion;
-use App\Models\Exam;
-use App\Models\ExamSubject;
-use Illuminate\Http\Request;
+    use App\Models\Exam;
+    use App\Models\ExamQuestion;
+    use App\Models\ExamAnswer;
+    use App\Models\QuestionImage;
+    use App\Models\AnswerImage;
+    use App\Models\ExamSubject;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Storage;
 
-class ExamQuestionController extends Controller
-{
-    public function index()
+    class ExamQuestionController extends Controller
     {
-        $questions = ExamQuestion::with(['exam', 'subject'])->get();
-        return view('admin.exam-questions.index', compact('questions'));
+        public function index()
+        {
+            $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage'])->get();
+            return view('admin.exam-questions.index', compact('exams'));
+        }
+
+        public function create($examId)
+        {
+            $exam = Exam::with(['type', 'group', 'foreignLanguage'])->findOrFail($examId);
+
+            // İmtahan türüne ve grubuna göre fennleri belirle
+            $subjects = $this->getSubjectsForExam($exam);
+
+            return view('admin.exam-questions.create', compact('exam', 'subjects'));
+        }
+        public function store(Request $request)
+        {
+            $validated = $request->validate([
+                'exam_id' => 'required|exists:exams,id',
+                'exam_subject_id' => 'required|exists:exam_subjects,id',
+                'questions' => 'required|array',
+                'questions.*.question_content' => 'required|string',
+                'questions.*.point' => 'required|numeric|min:0',
+                'questions.*.question_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'questions.*.answers' => 'required|array',
+                'questions.*.answers.*.content' => 'required|string',
+                'questions.*.answers.*.state' => 'required|boolean',
+                'questions.*.answers.*.images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            foreach ($validated['questions'] as $index => $questionData) {
+                // Soruyu oluştur
+                $question = ExamQuestion::create([
+                    'exam_id' => $validated['exam_id'],
+                    'exam_subject_id' => $validated['exam_subject_id'],
+                    'question_content' => $questionData['question_content'],
+                    'point' => $questionData['point'],
+                ]);
+
+                // Soru resimlerini kaydet
+                if (isset($questionData['question_images']) && $request->hasFile("questions.{$index}.question_images")) {
+                    foreach ($request->file("questions.{$index}.question_images") as $image) {
+                        $path = $image->store('question_images', 'public');
+                        QuestionImage::create([
+                            'exam_question_id' => $question->id,
+                            'image_path' => $path,
+                        ]);
+                    }
+                }
+
+                // Cevapları ve cevap resimlerini kaydet
+                foreach ($questionData['answers'] as $answerIndex => $answerData) {
+                    $answer = ExamAnswer::create([
+                        'exam_question_id' => $question->id,
+                        'answer_content' => $answerData['content'],
+                        'state' => $answerData['state'],
+                    ]);
+
+                    if (isset($answerData['images']) && $request->hasFile("questions.{$index}.answers.{$answerIndex}.images")) {
+                        foreach ($request->file("questions.{$index}.answers.{$answerIndex}.images") as $image) {
+                            $path = $image->store('answer_images', 'public');
+                            AnswerImage::create([
+                                'exam_answer_id' => $answer->id,
+                                'image_path' => $path,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            return redirect()->route('exam-questions.index')->with('success', 'Sual(lar) uğurla əlavə edildi.');
+        }
+        // İmtahan türüne ve grubuna göre fennleri belirleyen yardımcı metod
+        private function getSubjectsForExam($exam)
+        {
+            $subjects = [];
+
+            // Fenn isimleri ve ID'leri
+            $subjectNames = [
+                'Azərbaycan Dili' => ExamSubject::where('name', 'Azərbaycan Dili')->first(),
+                'Riyaziyyat' => ExamSubject::where('name', 'Riyaziyyat')->first(),
+                'İngilis Dili' => ExamSubject::where('name', 'İngilis Dili')->first(),
+                'Rus Dili' => ExamSubject::where('name', 'Rus Dili')->first(),
+                'Fizika' => ExamSubject::where('name', 'Fizika')->first(),
+                'Kimya' => ExamSubject::where('name', 'Kimya')->first(),
+                'Azərbaycan Tarixi' => ExamSubject::where('name', 'Azərbaycan Tarixi')->first(),
+                'Coğrafiya' => ExamSubject::where('name', 'Coğrafiya')->first(),
+                'Ədəbiyyat' => ExamSubject::where('name', 'Ədəbiyyat')->first(),
+                'Tarix' => ExamSubject::where('name', 'Tarix')->first(),
+                'Biologiya' => ExamSubject::where('name', 'Biologiya')->first(),
+            ];
+
+            $examType = $exam->type->type;
+            $examGroup = $exam->group->group_name;
+            $foreignLanguage = $exam->foreignLanguage ? trim($exam->foreignLanguage->name) : 'İngilis Dili'; // Varsayılan olarak İngilizce
+
+            if ($examType === 'Buraxılış') {
+                $subjects = [
+                    $subjectNames['Azərbaycan Dili'],
+                    $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                    $subjectNames['Riyaziyyat'],
+                ];
+            } elseif ($examType === 'Blok') {
+                if ($examGroup === '1') {
+                    $subjects = [
+                        $subjectNames['Riyaziyyat'],
+                        $subjectNames['Fizika'],
+                        $subjectNames['Kimya'],
+                    ];
+                } elseif ($examGroup === '2') {
+                    $subjects = [
+                        $subjectNames['Riyaziyyat'],
+                        $subjectNames['Azərbaycan Tarixi'],
+                        $subjectNames['Coğrafiya'],
+                    ];
+                } elseif ($examGroup === '3') {
+                    $subjects = [
+                        $subjectNames['Azərbaycan Dili'],
+                        $subjectNames['Ədəbiyyat'],
+                        $subjectNames['Tarix'],
+                    ];
+                } elseif ($examGroup === '4') {
+                    $subjects = [
+                        $subjectNames['Biologiya'],
+                        $subjectNames['Fizika'],
+                        $subjectNames['Kimya'],
+                    ];
+                }
+            } elseif ($examType === 'Hamısı') {
+                if ($examGroup === '1') {
+                    $subjects = [
+                        $subjectNames['Azərbaycan Dili'],
+                        $subjectNames['Riyaziyyat'],
+                        $subjectNames['Fizika'],
+                        $subjectNames['Kimya'],
+                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                    ];
+                } elseif ($examGroup === '2') {
+                    $subjects = [
+                        $subjectNames['Azərbaycan Dili'],
+                        $subjectNames['Riyaziyyat'],
+                        $subjectNames['Coğrafiya'],
+                        $subjectNames['Azərbaycan Tarixi'],
+                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                    ];
+                } elseif ($examGroup === '3') {
+                    $subjects = [
+                        $subjectNames['Azərbaycan Dili'],
+                        $subjectNames['Riyaziyyat'],
+                        $subjectNames['Ədəbiyyat'],
+                        $subjectNames['Tarix'],
+                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                    ];
+                } elseif ($examGroup === '4') {
+                    $subjects = [
+                        $subjectNames['Azərbaycan Dili'],
+                        $subjectNames['Riyaziyyat'],
+                        $subjectNames['Fizika'],
+                        $subjectNames['Kimya'],
+                        $subjectNames['Biologiya'],
+                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                    ];
+                }
+            }
+
+            return array_filter($subjects); // Null değerleri filtrele
+        }
     }
-
-    public function create()
-    {
-        $exams = Exam::all();
-        $subjects = ExamSubject::all();
-        return view('admin.exam-questions.create', compact('exams', 'subjects'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'question_content' => 'required|string',
-            'point' => 'required|integer|min:0',
-            'exam_subject_id' => 'required|exists:exam_subjects,id',
-            'exam_id' => 'required|exists:exams,id',
-        ]);
-
-        ExamQuestion::create($validated);
-        return redirect()->route('exam-questions.index')->with('success', 'Sual uğurla yaradıldı.');
-    }
-
-    public function show($id)
-    {
-        $question = ExamQuestion::with(['exam', 'subject'])->findOrFail($id);
-        return view('admin.exam-questions.show', compact('question'));
-    }
-
-    public function edit($id)
-    {
-        $question = ExamQuestion::findOrFail($id);
-        $exams = Exam::all();
-        $subjects = ExamSubject::all();
-        return view('admin.exam-questions.edit', compact('question', 'exams', 'subjects'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $question = ExamQuestion::findOrFail($id);
-
-        $validated = $request->validate([
-            'question_content' => 'required|string',
-            'point' => 'required|integer|min:0',
-            'exam_subject_id' => 'required|exists:exam_subjects,id',
-            'exam_id' => 'required|exists:exams,id',
-        ]);
-
-        $question->update($validated);
-        return redirect()->route('exam-questions.index')->with('success', 'Sual uğurla yeniləndi.');
-    }
-
-    public function destroy($id)
-    {
-        $question = ExamQuestion::findOrFail($id);
-        $question->delete();
-        return redirect()->route('exam-questions.index')->with('success', 'Sual uğurla silindi.');
-    }
-}
