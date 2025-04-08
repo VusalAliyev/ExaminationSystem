@@ -18,14 +18,14 @@ class ResultsController extends Controller
         $exam = Exam::with(['organizer', 'year', 'group', 'type'])->findOrFail($examId);
 
         // Tələbənin bu imtahandan nəticəsini çək
-        $result = ExamResult::where('userId', $user->id)
-            ->where('examId', $examId)
-            ->latest('completedAt')
+        $result = ExamResult::where('user_id', $user->id)
+            ->where('exam_id', $examId)
+            ->latest('completed_at')
             ->firstOrFail();
 
         // Tələbənin cavablarını çək
-        $userAnswers = UserAnswer::where('userId', $user->id)
-            ->where('examId', $examId)
+        $userAnswers = UserAnswer::where('user_id', $user->id)
+            ->where('exam_id', $examId)
             ->with(['question', 'answer'])
             ->get();
 

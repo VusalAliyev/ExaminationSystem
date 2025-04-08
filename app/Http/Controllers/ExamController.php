@@ -17,7 +17,7 @@ class ExamController extends Controller
         $exam = Exam::with(['organizer', 'year', 'group', 'type'])->findOrFail($id);
 
         // İmtahanın suallarını çək
-        $questions = ExamQuestion::where('examId', $id)->with('answers')->get();
+        $questions = ExamQuestion::where('exam_id', $id)->with('answers')->get();
 
         // İstifadəçi məlumatını çək
         $user = auth()->user();
@@ -25,6 +25,7 @@ class ExamController extends Controller
         // View-a məlumatları göndər
         return view('exam', compact('exam', 'questions', 'user'));
     }
+
     public function finish(Request $request, $id)
     {
         // İmtahanı çək
@@ -32,7 +33,7 @@ class ExamController extends Controller
         $user = auth()->user();
 
         // İmtahanın suallarını çək
-        $questions = ExamQuestion::where('examId', $id)->with('answers')->get();
+        $questions = ExamQuestion::where('exam_id', $id)->with('answers')->get();
 
         // Maksimum balı hesabla (bütün sualların ballarının cəmi)
         $maxScore = $questions->sum('point');
@@ -53,14 +54,14 @@ class ExamController extends Controller
             if ($question && $answer) {
                 // Cavabı UserAnswer cədvəlinə saxla
                 UserAnswer::create([
-                    'userId' => $user->id,
-                    'examId' => $exam->id,
-                    'questionId' => $question->id,
-                    'answerId' => $answer->id,
+                    'user_id' => $user->id,
+                    'exam_id' => $exam->id,
+                    'question_id' => $question->id,
+                    'answer_id' => $answer->id,
                 ]);
 
                 // Əgər cavab düzgündürsə, balı əlavə et
-                if ($answer->isCorrect) {
+                if ($answer->state === 'Correct') {
                     $totalScore += $question->point;
                     $correctAnswers++;
                 } else {
@@ -71,13 +72,13 @@ class ExamController extends Controller
 
         // Nəticəni exam_results cədvəlinə yaz
         $examResult = ExamResult::create([
-            'userId' => $user->id,
-            'examId' => $exam->id,
-            'totalScore' => $totalScore,
-            'correctAnswers' => $correctAnswers,
-            'wrongAnswers' => $wrongAnswers,
-            'maxScore' => $maxScore,
-            'completedAt' => now(),
+            'user_id' => $user->id,
+            'exam_id' => $exam->id,
+            'total_score' => $totalScore,
+            'correct_answers' => $correctAnswers,
+            'wrong_answers' => $wrongAnswers,
+            'max_score' => $maxScore,
+            'completed_at' => now(),
         ]);
 
         // Nəticə səhifəsinə yönləndir

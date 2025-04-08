@@ -23,15 +23,14 @@
 </header>
 
 <!-- Main Content -->
-<!-- Main Content -->
 <main class="results-content">
     <div class="result-card">
-        <h1>{{ $exam->Name }}</h1>
+        <h1>{{ $exam->name }}</h1>
         <div class="result-details">
-            <p><strong>Ümumi Bal:</strong> {{ $result->totalScore }} / {{ $result->maxScore }}</p>
-            <p><strong>Düzgün Cavablar:</strong> {{ $result->correctAnswers }}</p>
-            <p><strong>Səhv Cavablar:</strong> {{ $result->wrongAnswers }}</p>
-            <p><strong>İmtahanı Bitirdiyiniz Tarix:</strong> {{ $result->completedAt}}</p>
+            <p><strong>Ümumi Bal:</strong> {{ $result->total_score }} / {{ $result->max_score }}</p>
+            <p><strong>Düzgün Cavablar:</strong> {{ $result->correct_answers }}</p>
+            <p><strong>Səhv Cavablar:</strong> {{ $result->wrong_answers }}</p>
+            <p><strong>İmtahanı Bitirdiyiniz Tarix:</strong> {{ $result->completed_at }}</p>
         </div>
 
         <!-- Cavabları Göstər -->
@@ -40,9 +39,9 @@
             <h3>Cavablarınız</h3>
             @forelse ($userAnswers as $index => $userAnswer)
                 <div class="answer-detail">
-                    <p><strong>Sual {{ $index + 1 }}:</strong> {{ $userAnswer->question->text }}</p>
-                    <p><strong>Sizin Cavabınız:</strong> {{ $userAnswer->answer->text }}
-                        ({{ $userAnswer->answer->isCorrect ? 'Düzgün' : 'Səhv' }})</p>
+                    <p><strong>Sual {{ $index + 1 }}:</strong> {{ $userAnswer->question ? $userAnswer->question->question_content : 'Sual tapılmadı' }}</p>
+                    <p><strong>Sizin Cavabınız:</strong> {{ $userAnswer->answer ? $userAnswer->answer->answer_content : 'Cavab tapılmadı' }}
+                        ({{ $userAnswer->answer && $userAnswer->answer->state === 'Correct' ? 'Düzgün' : 'Səhv' }})</p>
                 </div>
             @empty
                 <p>Cavablar tapılmadı.</p>

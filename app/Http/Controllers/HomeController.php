@@ -32,16 +32,16 @@ class HomeController extends Controller
 
         // Filtrləri tətbiq et
         if ($yearId) {
-            $examsQuery->where('examYearId', $yearId);
+            $examsQuery->where('exam_year_id', $yearId);
         }
         if ($groupId) {
-            $examsQuery->where('examGroupId', $groupId);
+            $examsQuery->where('exam_group_id', $groupId);
         }
         if ($typeId) {
-            $examsQuery->where('examTypeId', $typeId);
+            $examsQuery->where('exam_type_id', $typeId);
         }
         if ($organizerId) {
-            $examsQuery->where('examOrganizerId', $organizerId);
+            $examsQuery->where('exam_organizer_id', $organizerId);
         }
 
         // İmtahanları əldə et

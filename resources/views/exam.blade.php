@@ -33,12 +33,12 @@
             <div class="question-card" id="question-{{ $index }}" style="display: {{ $index == 0 ? 'block' : 'none' }}">
                 <div class="question-header">
                     <span>Sual {{ $index + 1 }}/{{ $questions->count() }}</span>
-                    <span>{{ $question->Point }} bal</span>
+                    <span>{{ $question->point }} bal</span>
                 </div>
-                <h3>{{ $question->QuestionContent }}</h3>
-                @if ($question->Image)
+                <h3>{{ $question->question_content }}</h3>
+                @if ($question->images->isNotEmpty())
                     <div class="question-image">
-                        <img src="{{ asset('storage/' . $question->image->imagePath) }}" alt="Sual şəkli">
+                        <img src="{{ asset('storage/' . $question->images->first()->image_path) }}" alt="Sual şəkli">
                     </div>
                 @else
                     <div class="question-image">
@@ -49,7 +49,7 @@
                     @foreach ($question->answers as $answer)
                         <label class="answer-option">
                             <input type="radio" name="answer[{{ $question->id }}]" value="{{ $answer->id }}">
-                            {{ $answer->AnswerContent }}
+                            {{ $answer->answer_content }}
                         </label>
                     @endforeach
                 </div>

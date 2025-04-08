@@ -6,7 +6,7 @@
     <title>Abituriyent İmtahan Sistemi - Əsas Səhifə</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 </head>
 <body>
 <!-- Header -->
@@ -37,7 +37,7 @@
                     <option value="">Hamısı</option>
                     @foreach ($years as $year)
                         <option value="{{ $year->id }}" {{ request('year') == $year->id ? 'selected' : '' }}>
-                            {{ $year->Year }}
+                            {{ $year->year }}
                         </option>
                     @endforeach
                 </select>
@@ -48,7 +48,7 @@
                     <option value="">Hamısı</option>
                     @foreach ($groups as $group)
                         <option value="{{ $group->id }}" {{ request('group') == $group->id ? 'selected' : '' }}>
-                            {{ $group->GroupNumber }}
+                            {{ $group->group_name }}
                         </option>
                     @endforeach
                 </select>
@@ -59,7 +59,7 @@
                     <option value="">Hamısı</option>
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
-                            {{ $type->Type }}
+                            {{ $type->type }}
                         </option>
                     @endforeach
                 </select>
@@ -70,7 +70,7 @@
                     <option value="">Hamısı</option>
                     @foreach ($organizers as $organizer)
                         <option value="{{ $organizer->id }}" {{ request('organizer') == $organizer->id ? 'selected' : '' }}>
-                            {{ $organizer->Name }}
+                            {{ $organizer->name }}
                         </option>
                     @endforeach
                 </select>
@@ -85,11 +85,11 @@
         <div class="exam-grid">
             @forelse ($exams as $exam)
                 <div class="exam-card">
-                    <h3>{{ $exam->Name }}</h3>
-                    <p>Təşkilatçı: {{ $exam->organizer->Name }}</p>
-                    <p>İl: {{ $exam->year->Year }}</p>
-                    <p>Qrup: {{ $exam->group->GroupNumber }}</p>
-                    <p>Tip: {{ $exam->type->Type }}</p>
+                    <h3>{{ $exam->name }}</h3>
+                    <p>Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
+                    <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
+                    <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
+                    <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
                     <a href="{{ route('exam', $exam->id) }}" class="start-btn">İmtahanı Başlat</a>
                 </div>
             @empty
