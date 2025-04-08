@@ -15,7 +15,8 @@ use App\Http\Controllers\ExamSubjectController;
 use App\Http\Controllers\ExamTypeController;
 use App\Http\Controllers\ExamYearController;
 use App\Http\Controllers\QuestionImageController;
-use App\Http\Controllers\SectorController; // Yeni eklenen controller
+use App\Http\Controllers\SectorController;
+use App\Http\Controllers\ForeignLanguagesController; // Yeni eklenen controller
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/exam/{id}', [ExamController::class, 'show'])->name('exam');
@@ -35,7 +36,8 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::resource('exam-groups', ExamGroupController::class);
     Route::resource('exam-subjects', ExamSubjectController::class);
     Route::resource('exam-organizers', ExamOrganizerController::class);
-    Route::resource('sectors', SectorsController::class); // Yeni eklenen route
+    Route::resource('sectors', SectorsController::class);
+    Route::resource('foreign-languages', ForeignLanguagesController::class); // Yeni eklenen route
     Route::resource('exams', ExamsController::class);
     Route::resource('exam-questions', ExamQuestionController::class);
     Route::resource('exam-answers', ExamAnswerController::class);

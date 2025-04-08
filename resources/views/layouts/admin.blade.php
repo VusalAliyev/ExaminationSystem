@@ -54,7 +54,8 @@
             <a href="{{ route('exam-groups.index') }}">İmtahan Grupları</a>
             <a href="{{ route('exam-subjects.index') }}">İmtahan Fənnləri</a>
             <a href="{{ route('exam-organizers.index') }}">Keçirən Qurum</a>
-            <a href="{{ route('sectors.index') }}">Sektor</a> <!-- Yeni eklenen bağlantı -->
+            <a href="{{ route('sectors.index') }}">Sektörlər</a>
+            <a href="{{ route('foreign-languages.index') }}">Xarici Dillər</a> <!-- Yeni eklenen bağlantı -->
             <a href="{{ route('exams.index') }}">İmtahanlar</a>
             <a href="{{ route('exam-questions.index') }}">İmtahan Sualları</a>
             <a href="{{ route('exam-answers.index') }}">İmtahan Cavabları</a>

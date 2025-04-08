@@ -12,7 +12,8 @@
             <th>Növ</th>
             <th>Qrup</th>
             <th>İl</th>
-            <th>Sektor</th> <!-- Yeni sütun -->
+            <th>Sektör</th>
+            <th>Xarici Dil</th> <!-- Yeni sütun -->
             <th>Əməliyyatlar</th>
         </tr>
         </thead>
@@ -25,7 +26,8 @@
                 <td>{{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</td>
                 <td>{{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</td>
                 <td>{{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</td>
-                <td>{{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</td> <!-- Sector bilgisi -->
+                <td>{{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</td>
+                <td>{{ $exam->foreignLanguage ? $exam->foreignLanguage->name : 'Təyin edilməyib' }}</td> <!-- Foreign Language bilgisi -->
                 <td>
                     <a href="{{ route('exams.show', $exam->id) }}" class="btn btn-info btn-sm">Bax</a>
                     <a href="{{ route('exams.edit', $exam->id) }}" class="btn btn-warning btn-sm">Redaktə Et</a>

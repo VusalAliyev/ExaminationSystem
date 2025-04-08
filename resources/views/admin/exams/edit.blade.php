@@ -61,7 +61,7 @@
             @enderror
         </div>
         <div class="mb-3">
-            <label for="sector_id" class="form-label">Sektor</label>
+            <label for="sector_id" class="form-label">Sektör</label>
             <select name="sector_id" id="sector_id" class="form-control" required>
                 <option value="">Seçin</option>
                 @foreach ($sectors as $sector)
@@ -69,6 +69,18 @@
                 @endforeach
             </select>
             @error('sector_id')
+            <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="mb-3">
+            <label for="foreign_language_id" class="form-label">Xarici Dil</label>
+            <select name="foreign_language_id" id="foreign_language_id" class="form-control" required>
+                <option value="">Seçin</option>
+                @foreach ($foreignLanguages as $foreignLanguage)
+                    <option value="{{ $foreignLanguage->id }}" {{ $exam->foreign_language_id == $foreignLanguage->id ? 'selected' : '' }}>{{ $foreignLanguage->name }}</option>
+                @endforeach
+            </select>
+            @error('foreign_language_id')
             <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
