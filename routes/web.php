@@ -15,8 +15,7 @@ use App\Http\Controllers\ExamSubjectController;
 use App\Http\Controllers\ExamTypeController;
 use App\Http\Controllers\ExamYearController;
 use App\Http\Controllers\QuestionImageController;
-use App\Http\Controllers\SectorController;
-use App\Http\Controllers\ForeignLanguagesController; // Yeni eklenen controller
+use App\Http\Controllers\ForeignLanguagesController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/exam/{id}', [ExamController::class, 'show'])->name('exam');
@@ -37,11 +36,10 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::resource('exam-subjects', ExamSubjectController::class);
     Route::resource('exam-organizers', ExamOrganizerController::class);
     Route::resource('sectors', SectorsController::class);
-    Route::resource('foreign-languages', ForeignLanguagesController::class); // Yeni eklenen route
+    Route::resource('foreign-languages', ForeignLanguagesController::class);
     Route::resource('exams', ExamsController::class);
     Route::resource('exam-questions', ExamQuestionController::class);
     Route::resource('exam-answers', ExamAnswerController::class);
-    Route::get('exam-questions/create/{examId}', [ExamQuestionController::class, 'create'])->name('exam-questions.create'); // Özel create route'u
     Route::resource('answer-images', AnswerImageController::class);
     Route::resource('question-images', QuestionImageController::class);
 

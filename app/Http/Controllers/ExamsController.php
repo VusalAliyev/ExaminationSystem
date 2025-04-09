@@ -8,17 +8,19 @@ use App\Models\ExamType;
 use App\Models\ExamGroup;
 use App\Models\ExamYear;
 use App\Models\Sector;
-use App\Models\ForeignLanguage; // ForeignLanguage modelini ekle
+use App\Models\ForeignLanguage;
+use App\Models\SelectedSubject;
 use Illuminate\Http\Request;
 
 class ExamsController extends Controller
 {
     public function index()
     {
-        $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage'])->get();
+        $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage', 'selectedSubject'])->get();
         return view('admin.exams.index', compact('exams'));
     }
 
+    // Yeni sınav oluşturma formunu gösterir
     public function create()
     {
         $organizers = ExamOrganizer::all();
@@ -26,10 +28,13 @@ class ExamsController extends Controller
         $groups = ExamGroup::all();
         $years = ExamYear::all();
         $sectors = Sector::all();
-        $foreignLanguages = ForeignLanguage::all(); // Yabancı dilleri al
-        return view('admin.exams.create', compact('organizers', 'types', 'groups', 'years', 'sectors', 'foreignLanguages'));
+        $foreignLanguages = ForeignLanguage::all();
+        $selectedSubjects = SelectedSubject::all();
+
+        return view('admin.exams.create', compact('organizers', 'types', 'groups', 'years', 'sectors', 'foreignLanguages', 'selectedSubjects'));
     }
 
+    // Yeni sınavı kaydeder
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -39,7 +44,8 @@ class ExamsController extends Controller
             'exam_group_id' => 'required|exists:exam_groups,id',
             'exam_year_id' => 'required|exists:exam_years,id',
             'sector_id' => 'required|exists:sectors,id',
-            'foreign_language_id' => 'required|exists:foreign_languages,id', // Foreign Language doğrulama
+            'foreign_language_id' => 'nullable|exists:foreign_languages,id',
+            'selected_subject_id' => 'nullable|exists:selected_subjects,id',
         ]);
 
         Exam::create($validated);
@@ -48,7 +54,7 @@ class ExamsController extends Controller
 
     public function show($id)
     {
-        $exam = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage'])->findOrFail($id);
+        $exam = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage', 'selectedSubject'])->findOrFail($id);
         return view('admin.exams.show', compact('exam'));
     }
 
@@ -60,8 +66,10 @@ class ExamsController extends Controller
         $groups = ExamGroup::all();
         $years = ExamYear::all();
         $sectors = Sector::all();
-        $foreignLanguages = ForeignLanguage::all(); // Yabancı dilleri al
-        return view('admin.exams.edit', compact('exam', 'organizers', 'types', 'groups', 'years', 'sectors', 'foreignLanguages'));
+        $foreignLanguages = ForeignLanguage::all();
+        $selectedSubjects = SelectedSubject::all();
+
+        return view('admin.exams.edit', compact('exam', 'organizers', 'types', 'groups', 'years', 'sectors', 'foreignLanguages', 'selectedSubjects'));
     }
 
     public function update(Request $request, $id)
@@ -75,7 +83,8 @@ class ExamsController extends Controller
             'exam_group_id' => 'required|exists:exam_groups,id',
             'exam_year_id' => 'required|exists:exam_years,id',
             'sector_id' => 'required|exists:sectors,id',
-            'foreign_language_id' => 'required|exists:foreign_languages,id', // Foreign Language doğrulama
+            'foreign_language_id' => 'nullable|exists:foreign_languages,id',
+            'selected_subject_id' => 'nullable|exists:selected_subjects,id',
         ]);
 
         $exam->update($validated);
