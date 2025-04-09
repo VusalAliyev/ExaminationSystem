@@ -103,25 +103,35 @@
                 'Ədəbiyyat' => ExamSubject::where('name', 'Ədəbiyyat')->first(),
                 'Tarix' => ExamSubject::where('name', 'Tarix')->first(),
                 'Biologiya' => ExamSubject::where('name', 'Biologiya')->first(),
+                'İnformatika' => ExamSubject::where('name', 'İnformatika')->first(), // Yeni eklenen İnformatika
             ];
 
             $examType = $exam->type->type;
             $examGroup = $exam->group->group_name;
             $foreignLanguage = $exam->foreignLanguage ? trim($exam->foreignLanguage->name) : 'İngilis Dili'; // Varsayılan olarak İngilizce
+            $selectedSubject = $exam->selectedSubject ? trim($exam->selectedSubject->name) : null; // Selected subject
 
             if ($examType === 'Buraxılış') {
                 $subjects = [
                     $subjectNames['Azərbaycan Dili'],
-                    $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                    $subjectNames[$foreignLanguage === 'İngilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
                     $subjectNames['Riyaziyyat'],
                 ];
             } elseif ($examType === 'Blok') {
                 if ($examGroup === '1') {
-                    $subjects = [
-                        $subjectNames['Riyaziyyat'],
-                        $subjectNames['Fizika'],
-                        $subjectNames['Kimya'],
-                    ];
+                    if ($selectedSubject === 'KF') {
+                        $subjects = [
+                            $subjectNames['Riyaziyyat'],
+                            $subjectNames['Fizika'],
+                            $subjectNames['Kimya'],
+                        ];
+                    } elseif ($selectedSubject === 'IF') {
+                        $subjects = [
+                            $subjectNames['Riyaziyyat'],
+                            $subjectNames['Fizika'],
+                            $subjectNames['İnformatika'],
+                        ];
+                    }
                 } elseif ($examGroup === '2') {
                     $subjects = [
                         $subjectNames['Riyaziyyat'],
@@ -129,11 +139,19 @@
                         $subjectNames['Coğrafiya'],
                     ];
                 } elseif ($examGroup === '3') {
-                    $subjects = [
-                        $subjectNames['Azərbaycan Dili'],
-                        $subjectNames['Ədəbiyyat'],
-                        $subjectNames['Tarix'],
-                    ];
+                    if ($selectedSubject === 'CT') {
+                        $subjects = [
+                            $subjectNames['Azərbaycan Dili'],
+                            $subjectNames['Coğrafiya'],
+                            $subjectNames['Tarix'],
+                        ];
+                    } elseif ($selectedSubject === 'ƏT') {
+                        $subjects = [
+                            $subjectNames['Azərbaycan Dili'],
+                            $subjectNames['Ədəbiyyat'],
+                            $subjectNames['Tarix'],
+                        ];
+                    }
                 } elseif ($examGroup === '4') {
                     $subjects = [
                         $subjectNames['Biologiya'],
@@ -148,7 +166,7 @@
                         $subjectNames['Riyaziyyat'],
                         $subjectNames['Fizika'],
                         $subjectNames['Kimya'],
-                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                        $subjectNames[$foreignLanguage === 'İngilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
                     ];
                 } elseif ($examGroup === '2') {
                     $subjects = [
@@ -156,7 +174,7 @@
                         $subjectNames['Riyaziyyat'],
                         $subjectNames['Coğrafiya'],
                         $subjectNames['Azərbaycan Tarixi'],
-                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                        $subjectNames[$foreignLanguage === 'İngilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
                     ];
                 } elseif ($examGroup === '3') {
                     $subjects = [
@@ -164,7 +182,7 @@
                         $subjectNames['Riyaziyyat'],
                         $subjectNames['Ədəbiyyat'],
                         $subjectNames['Tarix'],
-                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                        $subjectNames[$foreignLanguage === 'İngilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
                     ];
                 } elseif ($examGroup === '4') {
                     $subjects = [
@@ -173,7 +191,7 @@
                         $subjectNames['Fizika'],
                         $subjectNames['Kimya'],
                         $subjectNames['Biologiya'],
-                        $subjectNames[$foreignLanguage === 'Ingilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
+                        $subjectNames[$foreignLanguage === 'İngilis Dili' ? 'İngilis Dili' : 'Rus Dili'],
                     ];
                 }
             }

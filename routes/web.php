@@ -38,7 +38,11 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::resource('sectors', SectorsController::class);
     Route::resource('foreign-languages', ForeignLanguagesController::class);
     Route::resource('exams', ExamsController::class);
-    Route::resource('exam-questions', ExamQuestionController::class);
+
+    // ExamQuestionController için özelleştirilmiş resource rotaları
+    Route::resource('exam-questions', ExamQuestionController::class)->except(['create']); // create rotasını hariç tut
+    Route::get('exam-questions/create/{examId}', [ExamQuestionController::class, 'create'])->name('exam-questions.create'); // Özel create rotası
+
     Route::resource('exam-answers', ExamAnswerController::class);
     Route::resource('answer-images', AnswerImageController::class);
     Route::resource('question-images', QuestionImageController::class);
