@@ -10,17 +10,9 @@ class ExamSubjectSeeder extends Seeder
     public function run()
     {
         $subjects = [
-            'Azərbaycan Dili',
-            'Riyaziyyat',
-            'İngilis Dili',
-            'Rus Dili',
-            'Fizika',
-            'Kimya',
-            'Azərbaycan Tarixi',
-            'Coğrafiya',
-            'Ədəbiyyat',
-            'Tarix',
-            'Biologiya',
+            'Azərbaycan Dili', 'Riyaziyyat', 'İngilis Dili', 'Rus Dili',
+            'Fizika', 'Kimya', 'Azərbaycan Tarixi', 'Coğrafiya',
+            'Ədəbiyyat', 'Tarix', 'Biologiya', 'İnformatika'
         ];
 
         foreach ($subjects as $subject) {
