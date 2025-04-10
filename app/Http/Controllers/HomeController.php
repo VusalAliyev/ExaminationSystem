@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
@@ -7,30 +6,27 @@ use App\Models\ExamGroup;
 use App\Models\ExamOrganizer;
 use App\Models\ExamType;
 use App\Models\ExamYear;
+use App\Models\Sector;
+use App\Models\SelectedSubject;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        // Axtarış sorğusunu əldə et
         $search = $request->input('search');
-
-        // Filtrləri əldə et
         $yearId = $request->input('year');
         $groupId = $request->input('group');
         $typeId = $request->input('type');
         $organizerId = $request->input('organizer');
+        $sectorId = $request->input('sector'); // Sektor filtri
+        $selectedSubjectId = $request->input('selected_subject'); // Seçmə fənn filtri
 
-        // İmtahanları çək (əlaqələri ilə birlikdə)
-        $examsQuery = Exam::with(['organizer', 'year', 'group', 'type']);
+        $examsQuery = Exam::with(['organizer', 'year', 'group', 'type', 'sector', 'selected_subject']);
 
-        // Axtarış varsa, imtahan adında axtar
         if ($search) {
             $examsQuery->where('name', 'like', '%' . $search . '%');
         }
-
-        // Filtrləri tətbiq et
         if ($yearId) {
             $examsQuery->where('exam_year_id', $yearId);
         }
@@ -43,20 +39,23 @@ class HomeController extends Controller
         if ($organizerId) {
             $examsQuery->where('exam_organizer_id', $organizerId);
         }
+        if ($sectorId) {
+            $examsQuery->where('sector_id', $sectorId);
+        }
+        if ($selectedSubjectId) {
+            $examsQuery->where('selected_subject_id', $selectedSubjectId);
+        }
 
-        // İmtahanları əldə et
         $exams = $examsQuery->get();
-
-        // Filtrlər üçün seçimləri çək
         $years = ExamYear::all();
         $groups = ExamGroup::all();
         $types = ExamType::all();
         $organizers = ExamOrganizer::all();
+        $sectors = Sector::all();
+        $selected_subjects = SelectedSubject::all();
 
-        // İstifadəçi məlumatını çək
         $user = auth()->user();
 
-        // View-a məlumatları göndər
-        return view('home', compact('exams', 'years', 'groups', 'types', 'organizers', 'user'));
+        return view('home', compact('exams', 'years', 'groups', 'types', 'organizers', 'sectors', 'selected_subjects', 'user'));
     }
 }

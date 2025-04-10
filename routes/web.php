@@ -25,9 +25,13 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
+Route::post('/exam/start', [ExamController::class, 'start'])->name('exam.start');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::resource('exam-types', ExamTypeController::class);

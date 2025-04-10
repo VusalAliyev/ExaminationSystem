@@ -64,7 +64,7 @@ class Exam extends Model
     }
 
     // SelectedSubject ile ilişki
-    public function selectedSubject()
+    public function selected_subject()
     {
         return $this->belongsTo(SelectedSubject::class, 'selected_subject_id');
     }

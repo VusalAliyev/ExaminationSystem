@@ -44,7 +44,7 @@
             </div>
             <div class="filter">
                 <label for="group">Qrup:</label>
-                <select id="group" name="group">
+                <select id="group" name="group" onchange="toggleSelectedSubject()">
                     <option value="">Hamısı</option>
                     @foreach ($groups as $group)
                         <option value="{{ $group->id }}" {{ request('group') == $group->id ? 'selected' : '' }}>
@@ -55,7 +55,7 @@
             </div>
             <div class="filter">
                 <label for="type">Tip:</label>
-                <select id="type" name="type">
+                <select id="type" name="type" onchange="toggleSelectedSubject()">
                     <option value="">Hamısı</option>
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
@@ -75,6 +75,24 @@
                     @endforeach
                 </select>
             </div>
+            <div class="filter">
+                <label for="sector">Sektor:</label>
+                <select id="sector" name="sector">
+                    <option value="">Hamısı</option>
+                    @foreach ($sectors as $sector)
+                        <option value="{{ $sector->id }}" {{ request('sector') == $sector->id ? 'selected' : '' }}>
+                            {{ $sector->sector_name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="filter" id="selectedSubjectFilter" style="display: none;">
+                <label for="selected_subject">Seçmə Fənn:</label>
+                <select id="selected_subject" name="selected_subject">
+                    <option value="">Hamısı</option>
+                    <!-- Seçmə fənlər JavaScript ilə dinamik doldurulacaq -->
+                </select>
+            </div>
             <button type="submit" class="apply-btn">Tətbiq Et</button>
         </form>
     </aside>
@@ -90,6 +108,8 @@
                     <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
                     <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
                     <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
+                    <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
+                    <p>Seçmə Fənn: {{ $exam->selected_subject ? $exam->selected_subject->name : 'Təyin edilməyib' }}</p>
                     <a href="{{ route('exam', $exam->id) }}" class="start-btn">İmtahanı Başlat</a>
                 </div>
             @empty
@@ -107,5 +127,75 @@
         <a href="#">Şərtlər və Qaydalar</a>
     </div>
 </footer>
+
+<!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
+<!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
+<!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
+<script>
+    // Seçmə fənlər (serverdən gələn məlumatlar)
+    const subjects = @json($selected_subjects->mapWithKeys(function ($subject) {
+        return [$subject->id => $subject->name];
+    })->toArray());
+
+    // Seçmə fənləri qrupa görə filtrləmək üçün mapping
+    const subjectMapping = {
+        'KF': 'kf',
+        'IF': 'if',
+        'CT': 'ct',
+        'ƏT': 'et'
+    };
+
+    // Qrupa görə icazə verilən fənlər
+    const allowedSubjects = {
+        1: ['kf', 'if'], // 1-ci qrup: Kimya və İnformatika
+        3: ['ct', 'et']  // 3-cü qrup: Coğrafiya və Ədəbiyyat
+    };
+
+    function toggleSelectedSubject() {
+        const groupSelect = document.getElementById('group');
+        const typeSelect = document.getElementById('type');
+        const selectedSubjectFilter = document.getElementById('selectedSubjectFilter');
+        const selectedSubjectDropdown = document.getElementById('selected_subject');
+        const selectedGroupId = groupSelect.value;
+        const selectedTypeId = typeSelect.value;
+
+        // Buraxılış imtahanı seçilibsə seçmə fənn filtri gizlənsin
+        const types = @json($types->mapWithKeys(function ($type) {
+            return [$type->id => $type->type];
+        })->toArray());
+        const isGraduation = types[selectedTypeId] === 'Buraxılış';
+
+        if (isGraduation || (selectedGroupId != 1 && selectedGroupId != 3)) {
+            selectedSubjectFilter.style.display = 'none';
+            return;
+        }
+
+        // 1-ci və 3-cü qruplar seçildikdə seçmə fənn filtri görünsün
+        selectedSubjectFilter.style.display = 'block';
+
+        // Dropdown-u təmizlə
+        selectedSubjectDropdown.innerHTML = '<option value="">Hamısı</option>';
+
+        // Qrupa uyğun fənləri əlavə et
+        const allowed = allowedSubjects[selectedGroupId] || [];
+        for (const [id, name] of Object.entries(subjects)) {
+            const shortName = subjectMapping[name]; // Adı qısaldılmış formaya çevir
+            if (allowed.includes(shortName)) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.text = name;
+                if (id == '{{ request('selected_subject') }}') {
+                    option.selected = true;
+                }
+                selectedSubjectDropdown.appendChild(option);
+            }
+        }
+    }
+
+    // Səhifə yüklənəndə filtri yoxla
+    window.onload = function() {
+        toggleSelectedSubject();
+    };
+</script>
 </body>
 </html>

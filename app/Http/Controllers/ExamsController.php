@@ -16,7 +16,7 @@ class ExamsController extends Controller
 {
     public function index()
     {
-        $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage', 'selectedSubject'])->get();
+        $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage', 'selected_subject'])->get();
         return view('admin.exams.index', compact('exams'));
     }
 

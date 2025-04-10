@@ -84,4 +84,17 @@ class ExamController extends Controller
         // Nəticə səhifəsinə yönləndir
         return redirect()->route('results', $exam->id);
     }
+    public function start(Request $request)
+    {
+        $exam_id = $request->input('exam_id');
+        $selected_subject_id = $request->input('selected_subject_id');
+
+        // İmtahanı tap
+        $exam = Exam::findOrFail($exam_id);
+
+        // Seçmə fənni yadda saxla (məsələn, session-da)
+        session(['selected_subject_id' => $selected_subject_id]);
+
+        return redirect()->route('exam', $exam->id);
+    }
 }
