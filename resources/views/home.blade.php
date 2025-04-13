@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <!-- Header -->
@@ -110,7 +112,7 @@
                     <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
                     <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
                     <p>Seçmə Fənn: {{ $exam->selected_subject ? $exam->selected_subject->name : 'Təyin edilməyib' }}</p>
-                    <a href="{{ route('exam', $exam->id) }}" class="start-btn">İmtahanı Başlat</a>
+                    <button class="start-btn" onclick="confirmStartExam('{{ route('exam', $exam->id) }}')">İmtahanı Başlat</button>
                 </div>
             @empty
                 <p>Heç bir imtahan tapılmadı.</p>
@@ -196,6 +198,25 @@
     window.onload = function() {
         toggleSelectedSubject();
     };
+</script>
+<!-- JavaScript for SweetAlert Confirmation -->
+<script>
+    function confirmStartExam(url) {
+        Swal.fire({
+            title: 'İmtahana başlamaq istədiyinizə əminsiniz mi?',
+            text: 'İmtahanı başlatdıqdan sonra geri dönüş olmayacaq!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Okay',
+            cancelButtonText: 'Ləğv et'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url; // İmtahan səhifəsinə yönləndir
+            }
+        });
+    }
 </script>
 </body>
 </html>
