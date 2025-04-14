@@ -4,28 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Abituriyent İmtahan Sistemi - Əsas Səhifə</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-    <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-<!-- Header -->
-<header class="header">
-    <div class="logo">
-        <span class="material-icons">book</span>
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="{{ route('home') }}" class="navbar-logo">
+        <i class="fas fa-book"></i>
         <span>Abituriyent İmtahan Sistemi</span>
-    </div>
-    <form class="search-bar" method="GET" action="{{ route('home') }}">
-        <span class="material-icons">search</span>
+    </a>
+    <form class="navbar-search" method="GET" action="{{ route('home') }}">
+        <i class="fas fa-search"></i>
         <input type="text" name="search" placeholder="İmtahan axtar..." value="{{ request('search') }}">
     </form>
-    <div class="profile">
-        <span class="material-icons">account_circle</span>
+    <div class="navbar-links">
+        <a href="#">Əsas Səhifə</a>
+        <a href="#">Haqqımızda</a>
+        <a href="#">İmtahanlar</a>
+        <a href="#">Əlaqə</a>
+    </div>
+    <div class="navbar-profile">
+        <i class="fas fa-user-circle"></i>
         <span>Salam, {{ $user->name }}!</span>
     </div>
-</header>
+</nav>
 
 <!-- Main Content -->
 <div class="container">
@@ -92,7 +97,6 @@
                 <label for="selected_subject">Seçmə Fənn:</label>
                 <select id="selected_subject" name="selected_subject">
                     <option value="">Hamısı</option>
-                    <!-- Seçmə fənlər JavaScript ilə dinamik doldurulacaq -->
                 </select>
             </div>
             <button type="submit" class="apply-btn">Tətbiq Et</button>
@@ -115,7 +119,7 @@
                     <button class="start-btn" onclick="confirmStartExam('{{ route('exam', $exam->id) }}')">İmtahanı Başlat</button>
                 </div>
             @empty
-                <p>Heç bir imtahan tapılmadı.</p>
+                <p class="no-exam">Heç bir imtahan tapılmadı.</p>
             @endforelse
         </div>
     </main>
@@ -124,6 +128,7 @@
 <!-- Footer -->
 <footer class="footer">
     <p>© 2025 Abituriyent İmtahan Sistemi</p>
+    <span class="developed-by">NVSoft tərəfindən hazırlanıb</span>
     <div class="footer-links">
         <a href="#">Bizimlə Əlaqə</a>
         <a href="#">Şərtlər və Qaydalar</a>
@@ -131,15 +136,11 @@
 </footer>
 
 <!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
-<!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
-<!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
 <script>
-    // Seçmə fənlər (serverdən gələn məlumatlar)
     const subjects = @json($selected_subjects->mapWithKeys(function ($subject) {
         return [$subject->id => $subject->name];
     })->toArray());
 
-    // Seçmə fənləri qrupa görə filtrləmək üçün mapping
     const subjectMapping = {
         'KF': 'kf',
         'IF': 'if',
@@ -147,10 +148,9 @@
         'ƏT': 'et'
     };
 
-    // Qrupa görə icazə verilən fənlər
     const allowedSubjects = {
-        1: ['kf', 'if'], // 1-ci qrup: Kimya və İnformatika
-        3: ['ct', 'et']  // 3-cü qrup: Coğrafiya və Ədəbiyyat
+        1: ['kf', 'if'],
+        3: ['ct', 'et']
     };
 
     function toggleSelectedSubject() {
@@ -161,7 +161,6 @@
         const selectedGroupId = groupSelect.value;
         const selectedTypeId = typeSelect.value;
 
-        // Buraxılış imtahanı seçilibsə seçmə fənn filtri gizlənsin
         const types = @json($types->mapWithKeys(function ($type) {
             return [$type->id => $type->type];
         })->toArray());
@@ -172,16 +171,12 @@
             return;
         }
 
-        // 1-ci və 3-cü qruplar seçildikdə seçmə fənn filtri görünsün
         selectedSubjectFilter.style.display = 'block';
-
-        // Dropdown-u təmizlə
         selectedSubjectDropdown.innerHTML = '<option value="">Hamısı</option>';
 
-        // Qrupa uyğun fənləri əlavə et
         const allowed = allowedSubjects[selectedGroupId] || [];
         for (const [id, name] of Object.entries(subjects)) {
-            const shortName = subjectMapping[name]; // Adı qısaldılmış formaya çevir
+            const shortName = subjectMapping[name];
             if (allowed.includes(shortName)) {
                 const option = document.createElement('option');
                 option.value = id;
@@ -194,11 +189,11 @@
         }
     }
 
-    // Səhifə yüklənəndə filtri yoxla
     window.onload = function() {
         toggleSelectedSubject();
     };
 </script>
+
 <!-- JavaScript for SweetAlert Confirmation -->
 <script>
     function confirmStartExam(url) {
@@ -207,13 +202,13 @@
             text: 'İmtahanı başlatdıqdan sonra geri dönüş olmayacaq!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Okay',
+            confirmButtonColor: '#a855f7',
+            cancelButtonColor: '#ef4444',
+            confirmButtonText: 'Bəli, başla',
             cancelButtonText: 'Ləğv et'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = url; // İmtahan səhifəsinə yönləndir
+                window.location.href = url;
             }
         });
     }
