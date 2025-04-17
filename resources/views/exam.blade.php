@@ -51,7 +51,7 @@
             </div>
             <div class="filter">
                 <label for="group">Qrup:</label>
-                <select id="group" name="group" onchange="toggleSelectedSubject()">
+                <select id="group" name="group">
                     <option value="">Hamısı</option>
                     @foreach ($groups as $group)
                         <option value="{{ $group->id }}" {{ request('group') == $group->id ? 'selected' : '' }}>
@@ -62,7 +62,7 @@
             </div>
             <div class="filter">
                 <label for="type">Tip:</label>
-                <select id="type" name="type" onchange="toggleSelectedSubject()">
+                <select id="type" name="type">
                     <option value="">Hamısı</option>
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
@@ -106,21 +106,24 @@
     <!-- Exam Cards -->
     <main class="main-content">
         <h1>Mövcud İmtahanlar</h1>
-        <div class="exam-grid">
-            @forelse ($exams as $exam)
-                <div class="exam-card">
-                    <h3>{{ $exam->name }}</h3>
-                    <p>Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
-                    <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
-                    <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
-                    <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
-                    <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
-                    <p>Seçmə Fənn: {{ $exam->selected_subject ? $exam->selected_subject->name : 'Təyin edilməyib' }}</p>
-                    <button class="start-btn" onclick="confirmStartExam('{{ route('exam', $exam->id) }}')">İmtahanı Başlat</button>
-                </div>
-            @empty
-                <p class="no-exam">Heç bir imtahan tapılmadı.</p>
-            @endforelse
+        <div class="exam-grid-wrapper">
+            <div class="exam-grid">
+                @forelse ($exams as $index => $exam)
+                    <div class="exam-card" data-index="{{ $index }}">
+                        <h3>{{ $exam->name }}</h3>
+                        <p>Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
+                        <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
+                        <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
+                        <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
+                        <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
+                        <p>Seçmə Fənn: {{ $exam->selected_subject ? $exam->selected_subject->name : 'Təyin edilməyib' }}</p>
+                        <button class="start-btn" onclick="confirmStartExam('{{ route('exam', $exam->id) }}')">İmtahanı Başlat</button>
+                    </div>
+                @empty
+                    <p class="no-exam">Heç bir imtahan tapılmadı.</p>
+                @endforelse
+            </div>
+            <button id="load-more-btn" class="load-more-btn">Daha Çox</button>
         </div>
     </main>
 </div>
@@ -135,68 +138,12 @@
     </div>
 </footer>
 
-<!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
+<!-- JavaScript -->
 <script>
-    const subjects = @json($selected_subjects->mapWithKeys(function ($subject) {
-        return [$subject->id => $subject->name];
-    })->toArray());
+    console.log('Script block started');
 
-    const subjectMapping = {
-        'KF': 'kf',
-        'IF': 'if',
-        'CT': 'ct',
-        'ƏT': 'et'
-    };
-
-    const allowedSubjects = {
-        1: ['kf', 'if'],
-        3: ['ct', 'et']
-    };
-
-    function toggleSelectedSubject() {
-        const groupSelect = document.getElementById('group');
-        const typeSelect = document.getElementById('type');
-        const selectedSubjectFilter = document.getElementById('selectedSubjectFilter');
-        const selectedSubjectDropdown = document.getElementById('selected_subject');
-        const selectedGroupId = groupSelect.value;
-        const selectedTypeId = typeSelect.value;
-
-        const types = @json($types->mapWithKeys(function ($type) {
-            return [$type->id => $type->type];
-        })->toArray());
-        const isGraduation = types[selectedTypeId] === 'Buraxılış';
-
-        if (isGraduation || (selectedGroupId != 1 && selectedGroupId != 3)) {
-            selectedSubjectFilter.style.display = 'none';
-            return;
-        }
-
-        selectedSubjectFilter.style.display = 'block';
-        selectedSubjectDropdown.innerHTML = '<option value="">Hamısı</option>';
-
-        const allowed = allowedSubjects[selectedGroupId] || [];
-        for (const [id, name] of Object.entries(subjects)) {
-            const shortName = subjectMapping[name];
-            if (allowed.includes(shortName)) {
-                const option = document.createElement('option');
-                option.value = id;
-                option.text = name;
-                if (id == '{{ request('selected_subject') }}') {
-                    option.selected = true;
-                }
-                selectedSubjectDropdown.appendChild(option);
-            }
-        }
-    }
-
-    window.onload = function() {
-        toggleSelectedSubject();
-    };
-</script>
-
-<!-- JavaScript for SweetAlert Confirmation -->
-<script>
     function confirmStartExam(url) {
+        console.log('confirmStartExam called with URL:', url);
         Swal.fire({
             title: 'İmtahana başlamaq istədiyinizə əminsiniz mi?',
             text: 'İmtahanı başlatdıqdan sonra geri dönüş olmayacaq!',
@@ -212,6 +159,78 @@
             }
         });
     }
+
+    function initializeLoadMore() {
+        console.log('initializeLoadMore started');
+        const examCards = document.querySelectorAll('.exam-card');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const totalCards = examCards.length;
+
+        console.log('Total exam cards:', totalCards);
+
+        if (!loadMoreBtn) {
+            console.error('Load More button not found');
+            return;
+        }
+
+        // If no cards or 8 or fewer, show all and hide button
+        if (totalCards <= 8) {
+            console.log('8 or fewer cards, showing all');
+            examCards.forEach(card => card.style.display = 'block');
+            loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        // Determine cards per row
+        let cardsPerRow = 4;
+        if (window.innerWidth <= 1200) cardsPerRow = 3;
+        if (window.innerWidth <= 768) cardsPerRow = 2;
+        if (window.innerWidth <= 480) cardsPerRow = 1;
+
+        console.log('Cards per row:', cardsPerRow);
+
+        const cardsPerLoad = cardsPerRow * 2; // 2 rows
+        let visibleCards = cardsPerLoad;
+
+        console.log('Initial visible cards:', visibleCards);
+
+        // Set initial visibility
+        examCards.forEach((card, index) => {
+            card.style.display = index < visibleCards ? 'block' : 'none';
+        });
+
+        // Show Load More button
+        loadMoreBtn.style.display = 'block';
+        console.log('Load More button set to visible');
+
+        // Handle button click
+        loadMoreBtn.addEventListener('click', () => {
+            console.log('Load More button clicked');
+            visibleCards += cardsPerLoad;
+            console.log('New visible cards:', visibleCards);
+
+            examCards.forEach((card, index) => {
+                if (index < visibleCards) {
+                    card.style.display = 'block';
+                }
+            });
+
+            if (visibleCards >= totalCards) {
+                loadMoreBtn.style.display = 'none';
+                console.log('All cards visible, button hidden');
+            }
+        });
+    }
+
+    window.onload = function() {
+        console.log('window.onload fired');
+        try {
+            initializeLoadMore();
+            console.log('initializeLoadMore completed');
+        } catch (error) {
+            console.error('Error in initializeLoadMore:', error);
+        }
+    };
 </script>
 </body>
 </html>
