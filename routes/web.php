@@ -21,18 +21,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/exam/{id}', [ExamController::class, 'show'])->name('exam');
     Route::post('/exam/{id}/finish', [ExamController::class, 'finish'])->name('exam.finish');
+    Route::get('/exam/{examId}/subject/{subjectId}/questions', [ExamQuestionController::class, 'getQuestionsBySubject'])->name('exam.subject.questions');
 });
 
 Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::post('/exam/start', [ExamController::class, 'start'])->name('exam.start');
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
 
 Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::resource('exam-types', ExamTypeController::class);
@@ -44,10 +42,8 @@ Route::prefix('admin')->middleware('isAdmin')->group(function () {
     Route::resource('foreign-languages', ForeignLanguagesController::class);
     Route::resource('exams', ExamsController::class);
 
-    // ExamQuestionController için özelleştirilmiş resource rotaları
-    Route::resource('exam-questions', ExamQuestionController::class)->except(['create']); // create rotasını hariç tut
-    Route::get('exam-questions/create/{examId}', [ExamQuestionController::class, 'create'])->name('exam-questions.create'); // Özel create rotası
-
+    Route::resource('exam-questions', ExamQuestionController::class)->except(['create']);
+    Route::get('exam-questions/create/{examId}', [ExamQuestionController::class, 'create'])->name('exam-questions.create');
     Route::resource('exam-answers', ExamAnswerController::class);
     Route::resource('answer-images', AnswerImageController::class);
     Route::resource('question-images', QuestionImageController::class);

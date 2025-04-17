@@ -18,7 +18,7 @@ class Exam extends Model
         'exam_year_id',
         'sector_id',
         'foreign_language_id',
-        'selected_subject_id', // Yeni eklenen sütun
+        'selected_subject_id',
     ];
 
     // ExamOrganizer ile ilişki
@@ -54,7 +54,7 @@ class Exam extends Model
     // ExamQuestion ile ilişki
     public function questions()
     {
-        return $this->hasMany(ExamQuestion::class, 'ExamID');
+        return $this->hasMany(ExamQuestion::class, 'exam_id');
     }
 
     // ForeignLanguage ile ilişki

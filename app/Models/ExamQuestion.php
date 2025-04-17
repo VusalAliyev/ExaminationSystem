@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class ExamQuestion extends Model
 {
-    protected $fillable = ['question_content', 'point', 'exam_subject_id', 'exam_id'];
+    use HasFactory;
+
+    protected $fillable = [
+        'exam_id',
+        'exam_subject_id',
+        'question_content',
+        'point',
+    ];
 
     public function exam()
     {
@@ -24,7 +31,7 @@ class ExamQuestion extends Model
         return $this->hasMany(ExamAnswer::class, 'exam_question_id');
     }
 
-    public function images()
+    public function questionImages()
     {
         return $this->hasMany(QuestionImage::class, 'exam_question_id');
     }

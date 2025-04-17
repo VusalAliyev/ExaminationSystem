@@ -37,7 +37,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <h2>İmtahanları Filtrlə</h2>
-        <form method="GET" action="{{ route('home') }}">
+        <form method="GET" action="{{ route('home') }}" id="filterForm">
             <div class="filter">
                 <label for="year">İl:</label>
                 <select id="year" name="year">
@@ -51,10 +51,10 @@
             </div>
             <div class="filter">
                 <label for="group">Qrup:</label>
-                <select id="group" name="group">
+                <select id="group" name="group" onchange="updateSelectedSubjectDropdown()">
                     <option value="">Hamısı</option>
                     @foreach ($groups as $group)
-                        <option value="{{ $group->id }}" {{ request('group') == $group->id ? 'selected' : '' }}>
+                        <option value="{{ $group->id }}" data-group-name="{{ $group->group_name }}" {{ request('group') == $group->id ? 'selected' : '' }}>
                             {{ $group->group_name }}
                         </option>
                     @endforeach
@@ -62,10 +62,10 @@
             </div>
             <div class="filter">
                 <label for="type">Tip:</label>
-                <select id="type" name="type">
+                <select id="type" name="type" onchange="updateSelectedSubjectDropdown()">
                     <option value="">Hamısı</option>
                     @foreach ($types as $type)
-                        <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+                        <option value="{{ $type->id }}" data-type-name="{{ $type->type }}" {{ request('type') == $type->id ? 'selected' : '' }}>
                             {{ $type->type }}
                         </option>
                     @endforeach
@@ -96,7 +96,7 @@
             <div class="filter" id="selectedSubjectFilter" style="display: none;">
                 <label for="selected_subject">Seçmə Fənn:</label>
                 <select id="selected_subject" name="selected_subject">
-                    <option value="">Hamısı</option>
+                    <option value="">Seçin</option>
                 </select>
             </div>
             <button type="submit" class="apply-btn">Tətbiq Et</button>
@@ -116,8 +116,7 @@
                         <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
                         <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
                         <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
-                        <p>Seçmə Fənn: {{ $exam->selected_subject ? $exam->selected_subject->name : 'Təyin edilməyib' }}</p>
-                        <button class="start-btn" onclick="confirmStartExam('{{ route('exam', $exam->id) }}')">İmtahanı Başlat</button>
+                        <button class="start-btn" onclick="startExam('{{ route('exam', $exam->id) }}')">İmtahana Başlat</button>
                     </div>
                 @empty
                     <p class="no-exam">Heç bir imtahan tapılmadı.</p>
@@ -140,7 +139,42 @@
 
 <!-- JavaScript -->
 <script>
-    function confirmStartExam(url) {
+    function updateSelectedSubjectDropdown() {
+        const typeSelect = document.getElementById('type');
+        const groupSelect = document.getElementById('group');
+        const selectedSubjectFilter = document.getElementById('selectedSubjectFilter');
+        const selectedSubject = document.getElementById('selected_subject');
+
+        // Seçilen değerleri al
+        const selectedType = typeSelect.options[typeSelect.selectedIndex]?.dataset.typeName || '';
+        const selectedGroup = groupSelect.options[groupSelect.selectedIndex]?.dataset.groupName || '';
+
+        console.log('Selected Type:', selectedType);
+        console.log('Selected Group:', selectedGroup);
+
+        // Dropdown’u sıfırla
+        selectedSubject.innerHTML = '<option value="">Seçin</option>';
+        selectedSubjectFilter.style.display = 'none';
+
+        // Blok türü ve Qrup 1 seçildiyse IF ve KF göster
+        if (selectedType === 'Blok' && selectedGroup === '1') {
+            selectedSubjectFilter.style.display = 'block';
+            selectedSubject.innerHTML += `
+                <option value="KF">Kimya-Fizika</option>
+                <option value="IF">İnformatika-Fizika</option>
+            `;
+        }
+        // Blok türü ve Qrup 3 seçildiyse ƏT ve CT göster
+        else if (selectedType === 'Blok' && selectedGroup === '3') {
+            selectedSubjectFilter.style.display = 'block';
+            selectedSubject.innerHTML += `
+                <option value="ƏT">Ədəbiyyat-Tarix</option>
+                <option value="CT">Coğrafiya-Tarix</option>
+            `;
+        }
+    }
+
+    function startExam(url) {
         Swal.fire({
             title: 'İmtahana başlamaq istədiyinizə əminsiniz mi?',
             text: 'İmtahanı başlatdıqdan sonra geri dönüş olmayacaq!',
@@ -167,28 +201,24 @@
             return;
         }
 
-        // Başlangıçta kaç kart gösterileceğini belirle
         let cardsPerRow = 4;
         if (window.innerWidth <= 1200) cardsPerRow = 3;
         if (window.innerWidth <= 768) cardsPerRow = 2;
         if (window.innerWidth <= 480) cardsPerRow = 1;
 
-        const cardsPerLoad = cardsPerRow * 2; // Her yüklemede 2 satır göster
+        const cardsPerLoad = cardsPerRow * 2;
         let visibleCards = cardsPerLoad;
 
-        // İlk kartları göster
         examCards.forEach((card, index) => {
             if (index < visibleCards) {
                 card.style.display = 'block';
             }
         });
 
-        // Eğer toplam kart sayısı başlangıçta gösterilenden fazlaysa butonu göster
         if (totalCards > visibleCards) {
             loadMoreBtn.style.display = 'block';
         }
 
-        // "Daha Çox" butonuna tıklama olayını ekle
         loadMoreBtn.addEventListener('click', () => {
             visibleCards += cardsPerLoad;
 
@@ -198,7 +228,6 @@
                 }
             });
 
-            // Eğer tüm kartlar gösterildiyse butonu gizle
             if (visibleCards >= totalCards) {
                 loadMoreBtn.style.display = 'none';
             }
@@ -207,6 +236,7 @@
 
     window.onload = function() {
         initializeLoadMore();
+        updateSelectedSubjectDropdown(); // İlk yüklemede dropdown’u güncelle
     };
 </script>
 </body>

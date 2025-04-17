@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
@@ -7,55 +8,78 @@ use App\Models\ExamOrganizer;
 use App\Models\ExamType;
 use App\Models\ExamYear;
 use App\Models\Sector;
-use App\Models\SelectedSubject;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
+
+        // Filtreleme parametrelerini al
         $search = $request->input('search');
-        $yearId = $request->input('year');
-        $groupId = $request->input('group');
-        $typeId = $request->input('type');
-        $organizerId = $request->input('organizer');
-        $sectorId = $request->input('sector'); // Sektor filtri
-        $selectedSubjectId = $request->input('selected_subject'); // Seçmə fənn filtri
+        $year = $request->input('year');
+        $group = $request->input('group');
+        $type = $request->input('type');
+        $organizer = $request->input('organizer');
+        $sector = $request->input('sector');
+        $selectedSubject = $request->input('selected_subject');
 
-        $examsQuery = Exam::with(['organizer', 'year', 'group', 'type', 'sector', 'selected_subject']);
-
-        if ($search) {
-            $examsQuery->where('name', 'like', '%' . $search . '%');
-        }
-        if ($yearId) {
-            $examsQuery->where('exam_year_id', $yearId);
-        }
-        if ($groupId) {
-            $examsQuery->where('exam_group_id', $groupId);
-        }
-        if ($typeId) {
-            $examsQuery->where('exam_type_id', $typeId);
-        }
-        if ($organizerId) {
-            $examsQuery->where('exam_organizer_id', $organizerId);
-        }
-        if ($sectorId) {
-            $examsQuery->where('sector_id', $sectorId);
-        }
-        if ($selectedSubjectId) {
-            $examsQuery->where('selected_subject_id', $selectedSubjectId);
+        // Seçmeli fənn seçimini session’a kaydet
+        if ($selectedSubject) {
+            session(['selected_subject' => $selectedSubject]);
         }
 
-        $exams = $examsQuery->get();
+        // İmtahanları filtrele
+        $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage'])
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%");
+            })
+            ->when($year, function ($query, $year) {
+                return $query->where('exam_year_id', $year);
+            })
+            ->when($group, function ($query, $group) {
+                return $query->where('exam_group_id', $group);
+            })
+            ->when($type, function ($query, $type) {
+                return $query->where('exam_type_id', $type);
+            })
+            ->when($organizer, function ($query, $organizer) {
+                return $query->where('exam_organizer_id', $organizer);
+            })
+            ->when($sector, function ($query, $sector) {
+                return $query->where('sector_id', $sector);
+            })
+            ->get();
+
+        // Filtreleme için dropdown verilerini al
         $years = ExamYear::all();
         $groups = ExamGroup::all();
         $types = ExamType::all();
         $organizers = ExamOrganizer::all();
         $sectors = Sector::all();
-        $selected_subjects = SelectedSubject::all();
 
-        $user = auth()->user();
+        // Hata ayıklama için log
+        \Log::info('HomeController@index', [
+            'search' => $search,
+            'year' => $year,
+            'group' => $group,
+            'type' => $type,
+            'organizer' => $organizer,
+            'sector' => $sector,
+            'selected_subject' => $selectedSubject,
+            'exams_count' => $exams->count(),
+        ]);
 
-        return view('home', compact('exams', 'years', 'groups', 'types', 'organizers', 'sectors', 'selected_subjects', 'user'));
+        return view('home', compact('exams', 'years', 'groups', 'types', 'organizers', 'sectors', 'user'));
+    }
+
+    public function store(Request $request)
+    {
+        // Seçmeli fenn seçimini session’a kaydet
+        $selectedSubject = $request->input('selected_subject');
+        session(['selected_subject' => $selectedSubject]);
+
+        return response()->json(['message' => 'Seçmeli fənn kaydedildi']);
     }
 }

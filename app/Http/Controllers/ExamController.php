@@ -3,27 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
-use App\Models\ExamAnswer;
 use App\Models\ExamQuestion;
+use App\Models\ExamAnswer;
 use App\Models\ExamResult;
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class ExamController extends Controller
 {
     public function show($id)
     {
         // İmtahanı əlaqəli məlumatlarla çək
-        $exam = Exam::with(['organizer', 'year', 'group', 'type'])->findOrFail($id);
+        $exam = Exam::with(['organizer', 'year', 'group', 'type', 'foreignLanguage'])->findOrFail($id);
 
-        // İmtahanın suallarını çək
-        $questions = ExamQuestion::where('exam_id', $id)->with('answers')->get();
+        // Seçilmiş fənn session’dan alınıb
+        $selectedSubject = session('selected_subject', null);
 
-        // İstifadəçi məlumatını çək
-        $user = auth()->user();
+        // Hata ayıklama için log
+        \Log::info('ExamController@show', [
+            'exam_id' => $id,
+            'selected_subject' => $selectedSubject,
+        ]);
+
+        // İmtahan türüne ve grubuna göre fennleri belirle
+        $examQuestionController = new ExamQuestionController();
+        $subjects = $examQuestionController->getSubjectsForExam($exam, $selectedSubject);
+
+        // $subjects dizisini bir koleksiyona dönüştür
+        $subjectsCollection = collect($subjects);
+
+        // Hata ayıklama için log
+        \Log::info('Subjects for Exam', [
+            'exam_id' => $id,
+            'subjects' => $subjectsCollection->pluck('name')->toArray(),
+        ]);
 
         // View-a məlumatları göndər
-        return view('exam', compact('exam', 'questions', 'user'));
+        return view('exam', compact('exam', 'subjects'));
     }
 
     public function finish(Request $request, $id)
@@ -39,7 +56,7 @@ class ExamController extends Controller
         $maxScore = $questions->sum('point');
 
         // Tələbənin cavablarını əldə et
-        $answers = $request->input('answer', []);
+        $answers = $request->input('answers', []); // AJAX isteğinden gelen cevaplar
 
         // Ümumi balı hesablamaq üçün dəyişənlər
         $totalScore = 0;
@@ -81,20 +98,13 @@ class ExamController extends Controller
             'completed_at' => now(),
         ]);
 
-        // Nəticə səhifəsinə yönləndir
-        return redirect()->route('results', $exam->id);
-    }
-    public function start(Request $request)
-    {
-        $exam_id = $request->input('exam_id');
-        $selected_subject_id = $request->input('selected_subject_id');
-
-        // İmtahanı tap
-        $exam = Exam::findOrFail($exam_id);
-
-        // Seçmə fənni yadda saxla (məsələn, session-da)
-        session(['selected_subject_id' => $selected_subject_id]);
-
-        return redirect()->route('exam', $exam->id);
+        // JSON yanıtı döndür (AJAX için)
+        return response()->json([
+            'message' => 'Sınav tamamlandı!',
+            'total_score' => $totalScore,
+            'correct_answers' => $correctAnswers,
+            'wrong_answers' => $wrongAnswers,
+            'max_score' => $maxScore,
+        ]);
     }
 }
