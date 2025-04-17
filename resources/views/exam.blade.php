@@ -99,7 +99,7 @@
                     <option value="">Hamısı</option>
                 </select>
             </div>
-            <button type="submit" class="apply-btn">Tətbiq Et</button>
+            <button type="submit" class="apply-btn">Tətbiq Etsdafgsdgsdg</button>
         </form>
     </aside>
 
@@ -109,7 +109,7 @@
         <div class="exam-grid-wrapper">
             <div class="exam-grid">
                 @forelse ($exams as $index => $exam)
-                    <div class="exam-card" data-index="{{ $index }}">
+                    <div class="exam-card" data-index="{{ $index }}" style="display: none;">
                         <h3>{{ $exam->name }}</h3>
                         <p>Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
                         <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
@@ -123,7 +123,7 @@
                     <p class="no-exam">Heç bir imtahan tapılmadı.</p>
                 @endforelse
             </div>
-            <button id="load-more-btn" class="load-more-btn">Daha Çox</button>
+            <button id="load-more-btn" class="load-more-btn" style="display: none;">Daha Çox</button>
         </div>
     </main>
 </div>
@@ -140,10 +140,7 @@
 
 <!-- JavaScript -->
 <script>
-    console.log('Script block started');
-
     function confirmStartExam(url) {
-        console.log('confirmStartExam called with URL:', url);
         Swal.fire({
             title: 'İmtahana başlamaq istədiyinizə əminsiniz mi?',
             text: 'İmtahanı başlatdıqdan sonra geri dönüş olmayacaq!',
@@ -161,53 +158,39 @@
     }
 
     function initializeLoadMore() {
-        console.log('initializeLoadMore started');
         const examCards = document.querySelectorAll('.exam-card');
         const loadMoreBtn = document.getElementById('load-more-btn');
         const totalCards = examCards.length;
 
-        console.log('Total exam cards:', totalCards);
-
-        if (!loadMoreBtn) {
-            console.error('Load More button not found');
-            return;
-        }
-
-        // If no cards or 8 or fewer, show all and hide button
-        if (totalCards <= 8) {
-            console.log('8 or fewer cards, showing all');
-            examCards.forEach(card => card.style.display = 'block');
+        if (totalCards === 0) {
             loadMoreBtn.style.display = 'none';
             return;
         }
 
-        // Determine cards per row
+        // Başlangıçta kaç kart gösterileceğini belirle
         let cardsPerRow = 4;
         if (window.innerWidth <= 1200) cardsPerRow = 3;
         if (window.innerWidth <= 768) cardsPerRow = 2;
         if (window.innerWidth <= 480) cardsPerRow = 1;
 
-        console.log('Cards per row:', cardsPerRow);
-
-        const cardsPerLoad = cardsPerRow * 2; // 2 rows
+        const cardsPerLoad = cardsPerRow * 2; // Her yüklemede 2 satır göster
         let visibleCards = cardsPerLoad;
 
-        console.log('Initial visible cards:', visibleCards);
-
-        // Set initial visibility
+        // İlk kartları göster
         examCards.forEach((card, index) => {
-            card.style.display = index < visibleCards ? 'block' : 'none';
+            if (index < visibleCards) {
+                card.style.display = 'block';
+            }
         });
 
-        // Show Load More button
-        loadMoreBtn.style.display = 'block';
-        console.log('Load More button set to visible');
+        // Eğer toplam kart sayısı başlangıçta gösterilenden fazlaysa butonu göster
+        if (totalCards > visibleCards) {
+            loadMoreBtn.style.display = 'block';
+        }
 
-        // Handle button click
+        // "Daha Çox" butonuna tıklama olayını ekle
         loadMoreBtn.addEventListener('click', () => {
-            console.log('Load More button clicked');
             visibleCards += cardsPerLoad;
-            console.log('New visible cards:', visibleCards);
 
             examCards.forEach((card, index) => {
                 if (index < visibleCards) {
@@ -215,21 +198,15 @@
                 }
             });
 
+            // Eğer tüm kartlar gösterildiyse butonu gizle
             if (visibleCards >= totalCards) {
                 loadMoreBtn.style.display = 'none';
-                console.log('All cards visible, button hidden');
             }
         });
     }
 
     window.onload = function() {
-        console.log('window.onload fired');
-        try {
-            initializeLoadMore();
-            console.log('initializeLoadMore completed');
-        } catch (error) {
-            console.error('Error in initializeLoadMore:', error);
-        }
+        initializeLoadMore();
     };
 </script>
 </body>

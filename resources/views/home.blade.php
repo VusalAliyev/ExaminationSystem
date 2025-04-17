@@ -51,7 +51,7 @@
             </div>
             <div class="filter">
                 <label for="group">Qrup:</label>
-                <select id="group" name="group" onchange="toggleSelectedSubject()">
+                <select id="group" name="group">
                     <option value="">Hamısı</option>
                     @foreach ($groups as $group)
                         <option value="{{ $group->id }}" {{ request('group') == $group->id ? 'selected' : '' }}>
@@ -62,7 +62,7 @@
             </div>
             <div class="filter">
                 <label for="type">Tip:</label>
-                <select id="type" name="type" onchange="toggleSelectedSubject()">
+                <select id="type" name="type">
                     <option value="">Hamısı</option>
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
@@ -106,21 +106,24 @@
     <!-- Exam Cards -->
     <main class="main-content">
         <h1>Mövcud İmtahanlar</h1>
-        <div class="exam-grid">
-            @forelse ($exams as $exam)
-                <div class="exam-card">
-                    <h3>{{ $exam->name }}</h3>
-                    <p>Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
-                    <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
-                    <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
-                    <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
-                    <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
-                    <p>Seçmə Fənn: {{ $exam->selected_subject ? $exam->selected_subject->name : 'Təyin edilməyib' }}</p>
-                    <button class="start-btn" onclick="confirmStartExam('{{ route('exam', $exam->id) }}')">İmtahanı Başlat</button>
-                </div>
-            @empty
-                <p class="no-exam">Heç bir imtahan tapılmadı.</p>
-            @endforelse
+        <div class="exam-grid-wrapper">
+            <div class="exam-grid">
+                @forelse ($exams as $index => $exam)
+                    <div class="exam-card" data-index="{{ $index }}" style="display: none;">
+                        <h3>{{ $exam->name }}</h3>
+                        <p>Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
+                        <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
+                        <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
+                        <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
+                        <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
+                        <p>Seçmə Fənn: {{ $exam->selected_subject ? $exam->selected_subject->name : 'Təyin edilməyib' }}</p>
+                        <button class="start-btn" onclick="confirmStartExam('{{ route('exam', $exam->id) }}')">İmtahanı Başlat</button>
+                    </div>
+                @empty
+                    <p class="no-exam">Heç bir imtahan tapılmadı.</p>
+                @endforelse
+            </div>
+            <button id="load-more-btn" class="load-more-btn" style="display: none;">Daha Çox</button>
         </div>
     </main>
 </div>
@@ -135,66 +138,7 @@
     </div>
 </footer>
 
-<!-- JavaScript for Showing/Hiding and Populating Selected Subject Filter -->
-<script>
-    const subjects = @json($selected_subjects->mapWithKeys(function ($subject) {
-        return [$subject->id => $subject->name];
-    })->toArray());
-
-    const subjectMapping = {
-        'KF': 'kf',
-        'IF': 'if',
-        'CT': 'ct',
-        'ƏT': 'et'
-    };
-
-    const allowedSubjects = {
-        1: ['kf', 'if'],
-        3: ['ct', 'et']
-    };
-
-    function toggleSelectedSubject() {
-        const groupSelect = document.getElementById('group');
-        const typeSelect = document.getElementById('type');
-        const selectedSubjectFilter = document.getElementById('selectedSubjectFilter');
-        const selectedSubjectDropdown = document.getElementById('selected_subject');
-        const selectedGroupId = groupSelect.value;
-        const selectedTypeId = typeSelect.value;
-
-        const types = @json($types->mapWithKeys(function ($type) {
-            return [$type->id => $type->type];
-        })->toArray());
-        const isGraduation = types[selectedTypeId] === 'Buraxılış';
-
-        if (isGraduation || (selectedGroupId != 1 && selectedGroupId != 3)) {
-            selectedSubjectFilter.style.display = 'none';
-            return;
-        }
-
-        selectedSubjectFilter.style.display = 'block';
-        selectedSubjectDropdown.innerHTML = '<option value="">Hamısı</option>';
-
-        const allowed = allowedSubjects[selectedGroupId] || [];
-        for (const [id, name] of Object.entries(subjects)) {
-            const shortName = subjectMapping[name];
-            if (allowed.includes(shortName)) {
-                const option = document.createElement('option');
-                option.value = id;
-                option.text = name;
-                if (id == '{{ request('selected_subject') }}') {
-                    option.selected = true;
-                }
-                selectedSubjectDropdown.appendChild(option);
-            }
-        }
-    }
-
-    window.onload = function() {
-        toggleSelectedSubject();
-    };
-</script>
-
-<!-- JavaScript for SweetAlert Confirmation -->
+<!-- JavaScript -->
 <script>
     function confirmStartExam(url) {
         Swal.fire({
@@ -212,6 +156,58 @@
             }
         });
     }
+
+    function initializeLoadMore() {
+        const examCards = document.querySelectorAll('.exam-card');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        const totalCards = examCards.length;
+
+        if (totalCards === 0) {
+            loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        // Başlangıçta kaç kart gösterileceğini belirle
+        let cardsPerRow = 4;
+        if (window.innerWidth <= 1200) cardsPerRow = 3;
+        if (window.innerWidth <= 768) cardsPerRow = 2;
+        if (window.innerWidth <= 480) cardsPerRow = 1;
+
+        const cardsPerLoad = cardsPerRow * 2; // Her yüklemede 2 satır göster
+        let visibleCards = cardsPerLoad;
+
+        // İlk kartları göster
+        examCards.forEach((card, index) => {
+            if (index < visibleCards) {
+                card.style.display = 'block';
+            }
+        });
+
+        // Eğer toplam kart sayısı başlangıçta gösterilenden fazlaysa butonu göster
+        if (totalCards > visibleCards) {
+            loadMoreBtn.style.display = 'block';
+        }
+
+        // "Daha Çox" butonuna tıklama olayını ekle
+        loadMoreBtn.addEventListener('click', () => {
+            visibleCards += cardsPerLoad;
+
+            examCards.forEach((card, index) => {
+                if (index < visibleCards) {
+                    card.style.display = 'block';
+                }
+            });
+
+            // Eğer tüm kartlar gösterildiyse butonu gizle
+            if (visibleCards >= totalCards) {
+                loadMoreBtn.style.display = 'none';
+            }
+        });
+    }
+
+    window.onload = function() {
+        initializeLoadMore();
+    };
 </script>
 </body>
 </html>
