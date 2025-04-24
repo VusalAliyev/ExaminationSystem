@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -17,8 +16,11 @@ use App\Http\Controllers\ExamYearController;
 use App\Http\Controllers\QuestionImageController;
 use App\Http\Controllers\ForeignLanguagesController;
 
+// Home route'unu auth middleware'i olmadan tanımlayın
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Auth middleware'i gerektiren diğer route'lar
 Route::middleware('auth')->group(function () {
-    Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/exam/{id}', [ExamController::class, 'show'])->name('exam');
     Route::post('/exam/{id}/finish', [ExamController::class, 'finish'])->name('exam.finish');
     Route::get('/exam/{examId}/subject/{subjectId}/questions', [ExamQuestionController::class, 'getQuestionsBySubject'])->name('exam.subject.questions');

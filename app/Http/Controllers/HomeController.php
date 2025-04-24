@@ -14,7 +14,8 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
+        // Kullanıcı giriş yapmışsa, user'ı al; yoksa null
+        $user = auth()->check() ? auth()->user() : null;
 
         // Filtreleme parametrelerini al
         $search = $request->input('search');
@@ -30,27 +31,31 @@ class HomeController extends Controller
             session(['selected_subject' => $selectedSubject]);
         }
 
-        // İmtahanları filtrele
-        $exams = Exam::with(['organizer', 'type', 'group', 'year', 'sector', 'foreignLanguage'])
-            ->when($search, function ($query, $search) {
-                return $query->where('name', 'like', "%{$search}%");
-            })
-            ->when($year, function ($query, $year) {
-                return $query->where('exam_year_id', $year);
-            })
-            ->when($group, function ($query, $group) {
-                return $query->where('exam_group_id', $group);
-            })
-            ->when($type, function ($query, $type) {
-                return $query->where('exam_type_id', $type);
-            })
-            ->when($organizer, function ($query, $organizer) {
-                return $query->where('exam_organizer_id', $organizer);
-            })
-            ->when($sector, function ($query, $sector) {
-                return $query->where('sector_id', $sector);
-            })
-            ->get();
+        // İmtahanları al (tüm imtahanlar, kullanıcıya bağlı olmadan)
+        $examsQuery = Exam::with(['organizer', 'type', 'group', 'year', 'sector']);
+
+        // Filtreleri sadece parametreler mevcutsa uygula
+        if ($search) {
+            $examsQuery->where('name', 'like', "%{$search}%");
+        }
+        if ($year) {
+            $examsQuery->where('exam_year_id', $year);
+        }
+        if ($group) {
+            $examsQuery->where('exam_group_id', $group);
+        }
+        if ($type) {
+            $examsQuery->where('exam_type_id', $type);
+        }
+        if ($organizer) {
+            $examsQuery->where('exam_organizer_id', $organizer);
+        }
+        if ($sector) {
+            $examsQuery->where('sector_id', $sector);
+        }
+
+        // user_id filtresini kaldır, tüm imtahanları çek
+        $exams = $examsQuery->get();
 
         // Filtreleme için dropdown verilerini al
         $years = ExamYear::all();
@@ -69,8 +74,11 @@ class HomeController extends Controller
             'sector' => $sector,
             'selected_subject' => $selectedSubject,
             'exams_count' => $exams->count(),
+            'request_inputs' => $request->all(),
+            'user_id' => $user ? $user->id : null,
         ]);
 
+        // View'a user'ı null olarak da gönderebiliriz
         return view('home', compact('exams', 'years', 'groups', 'types', 'organizers', 'sectors', 'user'));
     }
 

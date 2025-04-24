@@ -28,7 +28,11 @@
     </div>
     <div class="navbar-profile">
         <i class="fas fa-user-circle"></i>
-        <span>Salam, {{ $user->name }}!</span>
+        @if($user)
+            <span>Salam, {{ $user->name }}!</span>
+        @else
+            <span>Salam, Qonaq! <a href="{{ route('login') }}">Giriş Yap</a></span>
+        @endif
     </div>
 </nav>
 
@@ -122,7 +126,7 @@
                     <p class="no-exam">Heç bir imtahan tapılmadı.</p>
                 @endforelse
             </div>
-            <button id="load-more-btn" class="load-more-btn" style="display: none;">Daha Çox</button>
+            <button id="load-more-btn" class="load-more-btn">Daha Çox</button>
         </div>
     </main>
 </div>
@@ -196,6 +200,8 @@
         const loadMoreBtn = document.getElementById('load-more-btn');
         const totalCards = examCards.length;
 
+        console.log('Total Cards:', totalCards); // Hata ayıklama için
+
         if (totalCards === 0) {
             loadMoreBtn.style.display = 'none';
             return;
@@ -206,21 +212,29 @@
         if (window.innerWidth <= 768) cardsPerRow = 2;
         if (window.innerWidth <= 480) cardsPerRow = 1;
 
-        const cardsPerLoad = cardsPerRow * 2;
+        const cardsPerLoad = cardsPerRow * 2; // Her yüklemede 2 satır kart
         let visibleCards = cardsPerLoad;
 
+        console.log('Cards Per Load:', cardsPerLoad, 'Visible Cards:', visibleCards); // Hata ayıklama için
+
+        // İlk kartları göster
         examCards.forEach((card, index) => {
             if (index < visibleCards) {
                 card.style.display = 'block';
             }
         });
 
+        // Daha fazla kart varsa butonu göster
         if (totalCards > visibleCards) {
             loadMoreBtn.style.display = 'block';
+        } else {
+            loadMoreBtn.style.display = 'none';
         }
 
         loadMoreBtn.addEventListener('click', () => {
             visibleCards += cardsPerLoad;
+
+            console.log('Load More Clicked, New Visible Cards:', visibleCards); // Hata ayıklama için
 
             examCards.forEach((card, index) => {
                 if (index < visibleCards) {
