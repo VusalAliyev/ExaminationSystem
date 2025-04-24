@@ -31,7 +31,7 @@
         @if($user)
             <span>Salam, {{ $user->name }}!</span>
         @else
-            <span>Salam, Qonaq! <a href="{{ route('login') }}">Giriş Yap</a></span>
+            <span><a href="{{ route('login') }}" class="login-btn">Giriş Et</a></span>
         @endif
     </div>
 </nav>
