@@ -84,6 +84,82 @@ body {
     font-size: 1rem;
     color: #ffffff;
     font-weight: 500;
+    position: relative;
+}
+
+/* Giriş Et Butonu */
+.login-btn {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #22c55e, #4ade80);
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+/* Profil Dropdown */
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 1.8rem;
+    transition: transform 0.3s;
+}
+
+.profile-icon:hover {
+    transform: scale(1.1);
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    min-width: 150px;
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.8rem 1.2rem;
+    color: #1e293b;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.3s, color 0.3s;
+}
+
+.dropdown-item:hover {
+    background: #f9fafc;
+    color: #a855f7;
+}
+
+.logout-btn {
+    border-top: 1px solid #e2e8f0;
+}
+
+.logout-btn:hover {
+    background: #fef2f2;
+    color: #ef4444;
 }
 
 /* Container */
@@ -404,6 +480,27 @@ body {
     .footer-links {
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .navbar-profile {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .login-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-dropdown {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .dropdown-menu {
+        width: 100%;
+        text-align: center;
     }
 }
 

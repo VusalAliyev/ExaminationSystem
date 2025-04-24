@@ -6,7 +6,7 @@
     <title>Abituriyent İmtahan Sistemi - Əsas Səhifə</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') . '?v=' . time() }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
@@ -27,11 +27,23 @@
         <a href="#">Əlaqə</a>
     </div>
     <div class="navbar-profile">
-        <i class="fas fa-user-circle"></i>
         @if($user)
-            <span>Salam, {{ $user->name }}!</span>
+            <!-- Giriş yapılmışsa: Profil ikonu ve açılır menü -->
+            <div class="profile-dropdown">
+                <button class="profile-icon">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">Hesabım</a>
+                    <a href="{{ route('logout') }}" class="dropdown-item logout-btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Çıxış Et</a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
+            </div>
         @else
-            <span><a href="{{ route('login') }}" class="login-btn">Giriş Et</a></span>
+            <!-- Giriş yapılmamışsa: Şık bir Giriş Et butonu -->
+            <a href="{{ route('login') }}" class="login-btn">Giriş Et</a>
         @endif
     </div>
 </nav>
@@ -252,6 +264,25 @@
         initializeLoadMore();
         updateSelectedSubjectDropdown(); // İlk yüklemede dropdown’u güncelle
     };
+
+    // Açılır menü için JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileIcon = document.querySelector('.profile-icon');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        if (profileIcon && dropdownMenu) {
+            profileIcon.addEventListener('click', function() {
+                dropdownMenu.classList.toggle('show');
+            });
+
+            // Menü dışına tıklayınca kapanması için
+            document.addEventListener('click', function(event) {
+                if (!profileIcon.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+    });
 </script>
 </body>
 </html>
