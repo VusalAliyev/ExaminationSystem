@@ -4,7 +4,7 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectorsController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AnswerImageController;
 use App\Http\Controllers\ExamAnswerController;
 use App\Http\Controllers\ExamsController;
@@ -17,10 +17,15 @@ use App\Http\Controllers\ExamYearController;
 use App\Http\Controllers\QuestionImageController;
 use App\Http\Controllers\ForeignLanguagesController;
 
-// Home route'unu auth middleware'i olmadan tanımlayın
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Auth middleware'i gerektiren diğer route'lar
+Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::post('/contact/submit', [ContactController::class, 'submit'])->name('contact.submit');
+
+Route::get('/test-email', [ContactController::class, 'testEmail'])->name('test.email');
+
 Route::middleware('auth')->group(function () {
     Route::get('/exam/{id}', [ExamController::class, 'show'])->name('exam');
     Route::post('/exam/{id}/finish', [ExamController::class, 'finish'])->name('exam.finish');
