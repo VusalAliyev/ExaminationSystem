@@ -220,9 +220,9 @@
         }
 
         let cardsPerRow = 4;
-        if (window.innerWidth <= 1200) cardsPerRow = 3;
-        if (window.innerWidth <= 768) cardsPerRow = 2;
-        if (window.innerWidth <= 480) cardsPerRow = 1;
+        if (window.innerWidth <= 1440) cardsPerRow = 4;
+        if (window.innerWidth <= 1024) cardsPerRow = 2; // Adjusted for smaller screens
+        if (window.innerWidth <= 768) cardsPerRow = 1;
 
         const cardsPerLoad = cardsPerRow * 2; // Her yüklemede 2 satır kart
         let visibleCards = cardsPerLoad;
