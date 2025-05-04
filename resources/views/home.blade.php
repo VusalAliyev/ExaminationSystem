@@ -64,7 +64,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="filter">
+            <div class="filter" id="groupFilter">
                 <label for="group">Qrup:</label>
                 <select id="group" name="group" onchange="updateSelectedSubjectDropdown()">
                     <option value="">Hamısı</option>
@@ -77,7 +77,7 @@
             </div>
             <div class="filter">
                 <label for="type">Tip:</label>
-                <select id="type" name="type" onchange="updateSelectedSubjectDropdown()">
+                <select id="type" name="type" onchange="updateSelectedSubjectDropdown(); toggleGroupFilter();">
                     <option value="">Hamısı</option>
                     @foreach ($types as $type)
                         <option value="{{ $type->id }}" data-type-name="{{ $type->type }}" {{ request('type') == $type->id ? 'selected' : '' }}>
@@ -126,11 +126,13 @@
                 @forelse ($exams as $index => $exam)
                     <div class="exam-card" data-index="{{ $index }}" style="display: none;">
                         <h3>{{ $exam->name }}</h3>
-                        <p>Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
-                        <p>İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
-                        <p>Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
-                        <p>Tip: {{ $exam->type ? $exam->type->type : 'Təyin edilməyib' }}</p>
-                        <p>Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
+                        <p class="exam-detail">Təşkilatçı: {{ $exam->organizer ? $exam->organizer->name : 'Təyin edilməyib' }}</p>
+                        <p class="exam-detail">İl: {{ $exam->year ? $exam->year->year : 'Təyin edilməyib' }}</p>
+                        <p class="exam-detail">Qrup: {{ $exam->group ? $exam->group->group_name : 'Təyin edilməyib' }}</p>
+                        @if($exam->type && $exam->type->type !== 'Buraxılış')
+                            <p class="exam-detail">Tip: {{ $exam->type->type }}</p>
+                        @endif
+                        <p class="exam-detail">Sektor: {{ $exam->sector ? $exam->sector->sector_name : 'Təyin edilməyib' }}</p>
                         <button class="start-btn" onclick="startExam('{{ route('exam', $exam->id) }}')">İmtahana Başlat</button>
                     </div>
                 @empty
@@ -186,6 +188,19 @@
                 <option value="ƏT">Ədəbiyyat-Tarix</option>
                 <option value="CT">Coğrafiya-Tarix</option>
             `;
+        }
+    }
+
+    function toggleGroupFilter() {
+        const typeSelect = document.getElementById('type');
+        const groupFilter = document.getElementById('groupFilter');
+        const selectedType = typeSelect.options[typeSelect.selectedIndex]?.dataset.typeName || '';
+
+        if (selectedType === 'Buraxılış') {
+            groupFilter.style.display = 'none';
+            document.getElementById('group').value = ''; // Qrup seçimini sıfırla
+        } else {
+            groupFilter.style.display = 'block';
         }
     }
 
@@ -262,6 +277,7 @@
     window.onload = function() {
         initializeLoadMore();
         updateSelectedSubjectDropdown(); // İlk yüklemede dropdown’u güncelle
+        toggleGroupFilter(); // İlk yüklemede Qrup filtresini kontrol et
     };
 
     // Açılır menü için JavaScript
@@ -270,7 +286,8 @@
         const dropdownMenu = document.querySelector('.dropdown-menu');
 
         if (profileIcon && dropdownMenu) {
-            profileIcon.addEventListener('click', function() {
+            profileIcon.addEventListener('click', function(event) {
+                event.preventDefault();
                 dropdownMenu.classList.toggle('show');
             });
 

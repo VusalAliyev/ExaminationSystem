@@ -346,6 +346,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-height: 2rem; /* Başlık için sabit yükseklik */
 }
 
 .exam-card h3::before {
@@ -356,16 +357,17 @@ body {
     font-size: 1rem;
 }
 
-.exam-card p {
+.exam-card .exam-detail {
     font-size: 0.9rem;
     color: #64748b;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-height: 1.5rem; /* Her detay satırı için sabit yükseklik */
 }
 
-.exam-card p::before {
+.exam-card .exam-detail::before {
     content: '\f05a';
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
@@ -641,7 +643,7 @@ body {
         font-size: 1.1rem;
     }
 
-    .exam-card p {
+    .exam-card .exam-detail {
         font-size: 0.85rem;
     }
 
@@ -783,7 +785,7 @@ body {
         font-size: 1rem;
     }
 
-    .exam-card p {
+    .exam-card .exam-detail {
         font-size: 0.8rem;
     }
 
